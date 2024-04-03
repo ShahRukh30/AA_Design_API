@@ -1,0 +1,6 @@
+@AyeshaAliDesign_HostAddress = http://localhost:5168
+
+GET {{AyeshaAliDesign_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
