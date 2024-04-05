@@ -1,4 +1,5 @@
-﻿using Infrastructure.Context;
+﻿using BusinessLogic.Interfaces.Repositories;
+using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Generic
 {
-    public class GenericRepo<T> /*: IGenericRepo<T> where T : class*/ where T: class
+    public class GenericRepo<T> : IGenericRepository<T> where T : class 
     {
         private readonly AaDesignContext _appContext;
         public GenericRepo(AaDesignContext appcontext)
