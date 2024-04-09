@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Models.SupabaseModels;
 using Models.SupabaseModels.Dto;
+using Models.SupabaseModels.Dto.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,9 @@ namespace BusinessLogic.Services.Utilities.Mapper
         {
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();
+            CreateMap<ProductDto, Product>();
+            CreateMap<Product, ProductDto>();
+
         }
     }
 }

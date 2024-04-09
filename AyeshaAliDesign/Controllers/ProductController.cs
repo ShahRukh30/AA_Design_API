@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.Interfaces.Services;
+using BusinessLogic.Interfaces.Services.Product;
+using BusinessLogic.Services.ProductService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.SupabaseModels;
@@ -10,17 +12,19 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : SuperController<Product, ProductDto>
+    public class ProductController : ControllerBase
     {
-        public ProductController(IGenericService<Product> gen, IMapper mapper) : base(gen, mapper)
+        private  readonly IProductService _product;
+        public ProductController(IProductService product)
         {
+            _product=product;
         }
 
         [HttpPost("Add")]
 
-        public override async Task<ActionResult<Product>> Post([FromBody] ProductDto dto)
+        public async Task<ActionResult<Product>> Post([FromForm] ProductDto dto)
         {
-            return new Product();
+            return await _product.Post(dto);    
         }
 
     }
