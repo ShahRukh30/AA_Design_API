@@ -14,6 +14,7 @@ namespace BusinessLogic.Services.Utilities.Mapper
         public MappingProfile()
         {
             CreateMap<Role, RoleDto>();
+            CreateMap<RoleDto, Role>();
         }
     }
 }

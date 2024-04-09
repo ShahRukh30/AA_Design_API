@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddAutoMapper(typeof(Program), typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IRoleService,RoleService>();
