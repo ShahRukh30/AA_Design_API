@@ -28,16 +28,20 @@ namespace Infrastructure.Repositories.Generic
             return all_data ;
         }
 
-        public virtual async Task Post(T entity)
+        public virtual async Task<T> Post(T entity)
         {
             await _appContext.Set<T>().AddAsync(entity);
             await SaveChanges();
+            _appContext.Entry(entity).Reload();
+
+            return entity;
         }
 
         public virtual async Task Put(T entity)
         {
             _appContext.Set<T>().Update(entity);
             await SaveChanges();
+           
         }
 
         public virtual async Task Delete(T entity)

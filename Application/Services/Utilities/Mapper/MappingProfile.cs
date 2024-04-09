@@ -18,6 +18,11 @@ namespace BusinessLogic.Services.Utilities.Mapper
             CreateMap<RoleDto, Role>();
             CreateMap<ProductDto, Product>();
             CreateMap<Product, ProductDto>();
+            CreateMap<Productimage, ProductImageDto>();
+            CreateMap<ProductImageDto, Productimage>();
+            CreateMap<ProductSizeDto, Productsize>();
+            CreateMap<Productsize, ProductSizeDto>();
+
 
         }
     }

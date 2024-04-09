@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Models.SupabaseModels.Extras;
-using Models.SupabaseModels;
 
-namespace Infrastructure.Context;
+namespace API.Modellsss;
 
 public partial class PostgresContext : DbContext
 {
@@ -47,7 +45,7 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Migration> Migrations { get; set; }
 
-    public virtual DbSet<Models.SupabaseModels.Extras.Object> Objects { get; set; }
+    public virtual DbSet<Object> Objects { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
@@ -462,7 +460,7 @@ public partial class PostgresContext : DbContext
                 .HasColumnName("name");
         });
 
-        modelBuilder.Entity<Models.SupabaseModels.Extras.Object>(entity =>
+        modelBuilder.Entity<Object>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("objects_pkey");
 
@@ -568,7 +566,6 @@ public partial class PostgresContext : DbContext
                 .HasConstraintName("presences_channel_id_fkey");
         });
 
-
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.Productid).HasName("products_pkey");
@@ -602,7 +599,6 @@ public partial class PostgresContext : DbContext
                 .HasColumnName("productcategoryid");
             entity.Property(e => e.Productcategory1).HasColumnName("productcategory");
         });
-
 
         modelBuilder.Entity<Productimage>(entity =>
         {

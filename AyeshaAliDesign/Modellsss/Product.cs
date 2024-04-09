@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Models.SupabaseModels;
+namespace API.Modellsss;
 
 public partial class Product
 {

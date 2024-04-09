@@ -29,7 +29,8 @@ namespace BusinessLogic.Services.Utilities.FileStorage
 
             var supabase = new Supabase.Client(url, key, options);
             await supabase.InitializeAsync();
-            string fileName = Guid.NewGuid().ToString() + ".png";
+            string uniqueIdentifier = Guid.NewGuid().ToString().Substring(0, 8); // Use a portion of the GUID
+            string fileName = $"{uniqueIdentifier}.png";
 
             try
             {
@@ -42,12 +43,13 @@ namespace BusinessLogic.Services.Utilities.FileStorage
                     var uploadTask = supabase.Storage
                 .From("ProductImg") // Replace with your actual bucket name
                 .Upload(imageStream.ToArray(), fileName);
-
+                    var urlhead = "https://lbqpoifccgmqlsydhvke.supabase.co/storage/v1/";
                     // Wait for upload completion
                     var uploadedFile = await uploadTask;
 
+
                     // Return the public URL of the uploaded image
-                    return uploadedFile;
+                    return urlhead + uploadedFile;
                 }
             }
             catch (Exception ex)

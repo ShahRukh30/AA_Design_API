@@ -27,5 +27,12 @@ namespace API.Controllers
             return await _product.Post(dto);    
         }
 
+        [HttpGet]
+
+        public async Task<IEnumerable<object>> Get()
+        {
+            return await _product.GetProductListing();
+        }
+
     }
 }

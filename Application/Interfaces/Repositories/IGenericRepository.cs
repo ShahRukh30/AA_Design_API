@@ -10,7 +10,7 @@ namespace BusinessLogic.Interfaces.Repositories
     {
         Task<T> Get(int id);
         Task<IEnumerable<T>> Get();
-        Task Post(T entity);
+        Task<T> Post(T entity);
         Task Put(T entity);
         Task Delete(T entity);
     }

@@ -8,6 +8,7 @@ using BusinessLogic.Services.RoleService;
 using BusinessLogic.Services.Utilities.FileStorage;
 using BusinessLogic.Services.Utilities.Mapper;
 using Infrastructure.Context;
+using Infrastructure.Repositories;
 using Infrastructure.Repositories.Generic;
 using Models.SupabaseModels;
 
@@ -15,9 +16,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+); ;
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin() // Allow requests from any origin
+               .AllowAnyMethod() // Allow all HTTP methods
+               .AllowAnyHeader(); // Allow all headers
+    });
+});
+    }
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductSizeService,ProductSizeService>();

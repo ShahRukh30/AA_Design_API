@@ -11,5 +11,7 @@ namespace BusinessLogic.Interfaces.Services.Product
     public interface IProductService
     {
         Task<Models.SupabaseModels.Product> Post(ProductDto Entity);
+        Task<IEnumerable<Models.SupabaseModels.Product>> Get();
+        Task<IEnumerable<object>> GetProductListing();
     }
 }

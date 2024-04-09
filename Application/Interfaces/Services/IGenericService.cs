@@ -11,7 +11,7 @@ namespace BusinessLogic.Interfaces.Services
     {
         Task<T> Get(int id);
         Task<IEnumerable<T>> Get();
-        Task post(T Entity);
+        Task<T> post(T Entity);
         Task Put(T Entity);
         Task Delete(T Entity);
     }
