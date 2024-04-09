@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Models.Entities;
-using Models.Entities.Dtos.User;
+using Models.SupabaseModels;
+using Models.SupabaseModels.Dto.User;
 
 namespace API.Controllers
 {

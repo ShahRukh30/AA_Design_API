@@ -13,7 +13,7 @@ namespace API.Controllers
         private readonly IGenericService<T> _gen;
         private readonly IMapper _mapper;
 
-        public SuperController(GenericService<T> gen, IMapper mapper)
+        public SuperController(IGenericService<T> gen, IMapper mapper)
         {
             _gen = gen;
             _mapper = mapper;

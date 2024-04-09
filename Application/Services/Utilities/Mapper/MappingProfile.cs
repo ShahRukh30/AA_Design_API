@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Models.SupabaseModels;
+using Models.SupabaseModels.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace BusinessLogic.Services.Utilities.Mapper
     {
         public MappingProfile()
         {
-            
+            CreateMap<Role, RoleDto>();
         }
     }
 }

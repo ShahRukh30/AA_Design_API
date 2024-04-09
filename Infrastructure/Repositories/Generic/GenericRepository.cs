@@ -11,8 +11,8 @@ namespace Infrastructure.Repositories.Generic
 {
     public class GenericRepo<T> : IGenericRepository<T> where T : class 
     {
-        private readonly AaDesignContext _appContext;
-        public GenericRepo(AaDesignContext appcontext)
+        private readonly PostgresContext _appContext;
+        public GenericRepo(PostgresContext appcontext)
         {
             _appContext = appcontext;
         }
