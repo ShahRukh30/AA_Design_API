@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.SupabaseModels;
 using Models.SupabaseModels.Dto.Product;
+using System.Runtime.CompilerServices;
 
 namespace API.Controllers
 {
@@ -15,6 +16,12 @@ namespace API.Controllers
         {
         }
 
+        [HttpPost("Add")]
+
+        public override async Task<ActionResult<Product>> Post([FromBody] ProductDto dto)
+        {
+            return new Product();
+        }
 
     }
 }
