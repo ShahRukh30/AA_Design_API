@@ -19,16 +19,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 ); ;
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.AllowAnyOrigin() // Allow requests from any origin
-               .AllowAnyMethod() // Allow all HTTP methods
-               .AllowAnyHeader(); // Allow all headers
-    });
-});
-    }
+//builder.Services.AddCors(options =>
+//{
+//    options.AddDefaultPolicy(builder =>
+//    {
+//        builder.AllowAnyOrigin() // Allow requests from any origin
+//               .AllowAnyMethod() // Allow all HTTP methods
+//               .AllowAnyHeader(); // Allow all headers
+//    });
+//});
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
