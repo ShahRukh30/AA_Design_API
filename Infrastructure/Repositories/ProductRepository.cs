@@ -36,7 +36,10 @@ namespace Infrastructure.Repositories
                         select new
                         {
                             ProductId = product.Productid,
+                            ProductName=product.Productname,
+                            ProductPrice=product.Price,
                             CategoryName = category.Productcategory1,
+
                             ImageUrl = image.Imageurl
                         };
 
