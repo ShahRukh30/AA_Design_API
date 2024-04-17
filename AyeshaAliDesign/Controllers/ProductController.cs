@@ -2,6 +2,7 @@
 using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Interfaces.Services.Product;
 using BusinessLogic.Services.ProductService;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.SupabaseModels;
@@ -12,6 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAll")]
     public class ProductController : ControllerBase
     {
         private  readonly IProductService _product;
