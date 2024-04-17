@@ -27,6 +27,12 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
+
+        public Task<List<Product>> Get()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<object> GetDetailsById(int id)
         {
             var url = "https://lbqpoifccgmqlsydhvke.supabase.co";
