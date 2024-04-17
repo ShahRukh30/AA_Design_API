@@ -36,5 +36,14 @@ namespace API.Controllers
             return await _product.GetProductListing();
         }
 
+
+
+        [HttpGet("{id}")]
+
+        public async Task<object> GetDetailsById(int id)
+        {
+            return await _product.GetDetailsbyID(id);
+        }
+
     }
 }
