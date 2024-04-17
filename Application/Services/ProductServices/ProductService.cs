@@ -36,19 +36,11 @@ namespace BusinessLogic.Services.ProductService
             _productsize = productSize;
             _productrepo = productrepo;
         }
-        public Task Delete(Product Entity)
-        {
-            throw new NotImplementedException();
-        }
+      
 
-        public Task<Product> Get(int id)
+        public async Task<object> GetDetailsbyID(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Product>> Get()
-        {
-            return await _productrepo.Get();
+            return await _productrepo.GetDetailsById(id);
         }
 
         public async Task<IEnumerable<object>> GetProductListing()
@@ -137,9 +129,6 @@ namespace BusinessLogic.Services.ProductService
             return product;
         }
 
-        public Task Put(Product Entity)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

@@ -2,6 +2,8 @@
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Models.SupabaseModels;
+using Newtonsoft.Json;
+using Supabase.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +12,39 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
+    //return await _context.Products
+    //    .Include(p => p.Productsizes)
+    //    .Include(p => p.Productimages)
+    //    .Include(p => p.Productcategory)
+    //    .FirstOrDefaultAsync(p=>p.Productid==id);
+
+
     public class ProductRepository : IProductRepository
     {
-        IGenericRepository<Productsize> _psize;
+        
         PostgresContext _context;
         public ProductRepository(PostgresContext context)
         {
             _context = context;
         }
-        public async Task<List<Product>> Get()
+        public async Task<object> GetDetailsById(int id)
         {
-            return await _context.Products
-                .Include(p => p.Productsizes)
-                .Include(p => p.Productimages)
-                .Include(p => p.Productcategory)
-                .ToListAsync();
+            var url = "https://lbqpoifccgmqlsydhvke.supabase.co";
+            var key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxicXBvaWZjY2dtcWxzeWRodmtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2MDE4NDYsImV4cCI6MjAyODE3Nzg0Nn0.EkMkG3X1inJUPs0Y0_GFCnVBCidQ2VMtTlINCw3Xu8A";
+            var options = new Supabase.SupabaseOptions
+            {
+                AutoConnectRealtime = true
+            };
+
+            var supabase = new Supabase.Client(url, key, options);
+            await supabase.InitializeAsync();
+
+            var functionName = "get_product_details"; // Adjusted function name
+            var response = await supabase.Rpc(functionName, new Dictionary<string, object> { {"input_id", id} }); // Adjusted parameter name
+            var details = JsonConvert.DeserializeObject<object>(response.Content);
+            return details;
         }
+    
 
         public async Task<List<object>> GetProductListing()
         {
@@ -39,7 +58,6 @@ namespace Infrastructure.Repositories
                             ProductName=product.Productname,
                             ProductPrice=product.Price,
                             CategoryName = category.Productcategory1,
-
                             ImageUrl = image.Imageurl
                         };
 

@@ -10,7 +10,7 @@ namespace BusinessLogic.Interfaces.Repositories
     public interface IProductRepository
     {
 
-        Task<List<Product>> Get();
+        Task<object> GetDetailsById(int id);
         Task<List<object>> GetProductListing();
     }
 }
