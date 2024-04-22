@@ -10,7 +10,9 @@ using BusinessLogic.Services.Utilities.Mapper;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Generic;
+using Microsoft.AspNetCore.Hosting;
 using Models.SupabaseModels;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
