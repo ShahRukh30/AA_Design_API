@@ -49,6 +49,15 @@ builder.Services.AddDbContext<PostgresContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var portExists = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var port);
+if (portExists)
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(port);
+    });
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
