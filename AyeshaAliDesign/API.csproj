@@ -37,4 +37,8 @@
     <ProjectReference Include="..\Persistance\Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dependencies\" />
+  </ItemGroup>
+
 </Project>

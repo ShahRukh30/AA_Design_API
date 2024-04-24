@@ -16,7 +16,7 @@ using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -25,9 +25,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.AllowAnyOrigin() // Allow requests from any origin
-               .AllowAnyMethod() // Allow all HTTP methods
-               .AllowAnyHeader(); // Allow all headers
+        builder.AllowAnyOrigin() 
+               .AllowAnyMethod() 
+               .AllowAnyHeader(); 
     });
 });
 

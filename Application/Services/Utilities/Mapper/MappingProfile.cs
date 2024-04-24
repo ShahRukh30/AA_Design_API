@@ -2,6 +2,7 @@
 using Models.SupabaseModels;
 using Models.SupabaseModels.Dto;
 using Models.SupabaseModels.Dto.Product;
+using Models.SupabaseModels.Dto.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace BusinessLogic.Services.Utilities.Mapper
             CreateMap<ProductImageDto, Productimage>();
             CreateMap<ProductSizeDto, Productsize>();
             CreateMap<Productsize, ProductSizeDto>();
+            CreateMap<User1, UserDto>();
+            CreateMap<UserDto, User1>();
 
 
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Services.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
@@ -11,16 +12,26 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : SuperController<User, UserDto>
+    public class UserController : ControllerBase
     {
-        public UserController(GenericService<User> gen, IMapper mapper) : base(gen, mapper)
+        private readonly IUserService _userService;
+       
+        public UserController(GenericService<User> gen, IUserService uservice, IMapper mapper) 
         {
+            _userService = uservice;
         }
 
         [HttpPost("Login")]
-        public string Login(string email,string p)
+        public Task<object> Login(LoginDto dto)
         {
-            return "a";
+            return null;
+        }
+
+
+        [HttpPost("Register")]
+        public Task<User1> Register([FromBody] UserDto dto)
+        {
+            return _userService.Post(dto);
         }
     }
 }
