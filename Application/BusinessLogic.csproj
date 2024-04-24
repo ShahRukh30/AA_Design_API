@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="functions-csharp" Version="1.3.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
@@ -19,6 +20,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Persistance\Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Utilities\Identity\Tokenizor\" />
   </ItemGroup>
 
 </Project>

@@ -1,18 +1,26 @@
 using BusinessLogic.Interfaces.Repositories;
 using BusinessLogic.Interfaces.Services;
+using BusinessLogic.Interfaces.Services.Factories;
 using BusinessLogic.Interfaces.Services.Product;
 using BusinessLogic.Interfaces.Services.Utilites;
 using BusinessLogic.Services.Generic;
 using BusinessLogic.Services.ProductService;
 using BusinessLogic.Services.RoleService;
+using BusinessLogic.Services.UserService;
+using BusinessLogic.Services.Utilities.Factories.User;
 using BusinessLogic.Services.Utilities.FileStorage;
+using BusinessLogic.Services.Utilities.Identity.Authenticator;
 using BusinessLogic.Services.Utilities.Mapper;
+using DataAccess.Repositories;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Generic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Models.SupabaseModels;
 using System.Net;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,13 +40,41 @@ builder.Services.AddCors(options =>
 });
 
 
+IConfiguration config = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
+var Config = config.GetSection("Jwt");
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Key"]!));
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = Config["Issuer"],
+        ValidAudience = Config["Audience"],
+        IssuerSigningKey = key
+    };
+});
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IProductService, ProductService>();
+
 builder.Services.AddScoped<IProductSizeService,ProductSizeService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<IAuthenticator, Authenticator>();
+builder.Services.AddScoped<IUserFactory, UserFactory>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
@@ -70,7 +106,6 @@ app.MapGet("/", () => "Server is running!");
 
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.UseCors("AllowAll");
 

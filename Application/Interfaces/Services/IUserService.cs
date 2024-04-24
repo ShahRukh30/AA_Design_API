@@ -11,5 +11,6 @@ namespace BusinessLogic.Interfaces.Services
     public interface IUserService
     {
         Task<User1> Post(UserDto dto);
+        Task<object> Post(LoginDto loginDto);
     }
 }

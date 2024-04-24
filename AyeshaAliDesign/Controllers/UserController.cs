@@ -15,8 +15,8 @@ namespace API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-       
-        public UserController(GenericService<User> gen, IUserService uservice, IMapper mapper) 
+        private readonly IConfiguration _config;
+        public UserController(IUserService gen, IUserService uservice, IMapper mapper) 
         {
             _userService = uservice;
         }
@@ -24,7 +24,7 @@ namespace API.Controllers
         [HttpPost("Login")]
         public Task<object> Login(LoginDto dto)
         {
-            return null;
+            return _userService.Post(dto);
         }
 
 

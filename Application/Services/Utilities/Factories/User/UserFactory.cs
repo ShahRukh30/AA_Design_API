@@ -16,8 +16,8 @@ namespace BusinessLogic.Services.Utilities.Factories.User
                Firstname=users.Firstname,
                Lastname=users.Lastname,
                Email=users.Email,
-               Passwordhash=users.Passwordhash,
-               Phone=users.Phone,
+               Passwordhash= BCrypt.Net.BCrypt.HashPassword(users.Passwordhash),
+               Phone = users.Phone,
 
             };
 

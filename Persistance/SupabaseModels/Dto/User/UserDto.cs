@@ -16,7 +16,7 @@ namespace Models.SupabaseModels.Dto.User
 
         public required string Phone { get; set; }
 
-        public required string PasswordHash { get; set; }
+        public required string Passwordhash { get; set; }
 
 
     }
