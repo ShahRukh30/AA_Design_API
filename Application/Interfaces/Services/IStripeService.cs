@@ -10,7 +10,6 @@ namespace BusinessLogic.Interfaces.Services
 {
     public interface IStripeService
     {
-        Task<string> GetClientSecret(Models.SupabaseModels.Dto.Payment.PaymentIntent productdetails);
-
+        string CreateCheckoutSession(decimal amount, string currency, string productName, string successUrl, string cancelUrl);
     }
 }

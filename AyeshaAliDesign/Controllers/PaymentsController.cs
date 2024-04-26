@@ -17,13 +17,16 @@ namespace API.Controllers
             _stripe=stripe;
         }
 
-        [HttpPost("PaymentIntent")]
-        public Task<string> Post(PaymentIntent value)
-        {
-            var intent = _stripe.GetClientSecret(value);
-            return intent;
-        }
+        
 
+        [HttpGet("CheckoutSession")]
+        public string getsession(decimal amount, string currency, string productName, string successUrl, string cancelUrl)
+        {
+            successUrl = "https://example.com/success";
+            cancelUrl= "https://example.com/success";
+
+            return _stripe.CreateCheckoutSession(amount,currency,productName,successUrl,cancelUrl);
+        }
 
     }
 }

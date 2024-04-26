@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Models.SupabaseModels.Dto.Payment;
 using Stripe;
+using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,27 +20,61 @@ namespace BusinessLogic.Services.PaymentService.StripeService
         {
             _config = config;
         }
-        public async Task<string> GetClientSecret(Models.SupabaseModels.Dto.Payment.PaymentIntent productdetails)
+       
+        public string CreateCheckoutSession(decimal amount, string currency, string productName, string successUrl, string cancelUrl)
         {
-            var config = _config.GetSection("Stripe");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["SecretKey"]!));
-            StripeConfiguration.ApiKey = "sk_test_51OrJFLBCehTATMfqQyHN1bZQVkGVzxJyNi52rNX8Ipmhbb9T1WOhiU33LzdP5c0wmswM8qMMNUpUdHWE7xE9Xsv700NxoIWKT5";
-            decimal val = (decimal)productdetails.Amount * 100;
-            var options = new PaymentIntentCreateOptions
+            try
             {
-                Amount = (long?)val,
-                Currency = productdetails.Currency,
-                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                // Replace with your actual Stripe secret key
+                StripeConfiguration.ApiKey = "sk_test_51OrJFLBCehTATMfqQyHN1bZQVkGVzxJyNi52rNX8Ipmhbb9T1WOhiU33LzdP5c0wmswM8qMMNUpUdHWE7xE9Xsv700NxoIWKT5";
+
+                var options = new SessionCreateOptions
                 {
-                    Enabled = true,
-                },
-            };
+                    // Allowed payment methods
+                    PaymentMethodTypes = new List<string> { "card" },
 
-            var service = new PaymentIntentService();
-            var intent = await service.CreateAsync(options); 
+                    // List of line items for the checkout session
+                    LineItems = new List<SessionLineItemOptions>()
+      {
+        new SessionLineItemOptions
+        {
+          // Price data for the line item
+          PriceData = new SessionLineItemPriceDataOptions
+          {
+            // Amount in cents (multiply by 100)
+            UnitAmount = (long)(amount * 100),
+            Currency = currency,
 
-            return intent.ClientSecret;
+            // Product data for the line item
+            ProductData = new SessionLineItemPriceDataProductDataOptions
+            {
+              Name = productName,
+            },
+          },
+          // Quantity of the product (defaults to 1)
+          Quantity = 1,
+        },
+      },
 
+                    // Checkout session mode (payment in this case)
+                    Mode = "payment",
+
+                    // Redirect URLs after checkout success/cancellation
+                    SuccessUrl = successUrl,
+                    CancelUrl = cancelUrl,
+                };
+
+                var service = new SessionService();
+                var session = service.Create(options);
+
+                return session.Url;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it differently based on your needs
+                throw new Exception($"Failed to create checkout session: {ex.Message}");
+            }
         }
+
     }
 }
