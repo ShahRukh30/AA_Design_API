@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Models.SupabaseModels;
+using Stripe;
 using System.Net;
 using System.Text;
 
@@ -39,7 +40,7 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader(); 
     });
 });
-
+StripeConfiguration.ApiKey = "your_stripe_api_key_here";
 
 IConfiguration config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -70,7 +71,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductService.ProductService>();
 
 builder.Services.AddScoped<IProductSizeService,ProductSizeService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -110,6 +111,7 @@ app.MapGet("/", () => "Server is running!");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseCors("AllowAll");
+
 
 app.MapControllers();
 

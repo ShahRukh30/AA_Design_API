@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Interfaces.Services;
+using BusinessLogic.Services.PaymentService.StripeService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.SupabaseModels.Dto.Payment;
@@ -20,12 +21,16 @@ namespace API.Controllers
         
 
         [HttpGet("CheckoutSession")]
-        public string getsession(decimal amount, string currency, string productName, string successUrl, string cancelUrl)
+        public string getsession(decimal amount)
         {
-            successUrl = "https://example.com/success";
-            cancelUrl= "https://example.com/success";
+            return _stripe.CreateCheckoutSession(amount);
+        }
 
-            return _stripe.CreateCheckoutSession(amount,currency,productName,successUrl,cancelUrl);
+        [HttpPost("Payment-Event")]
+        public async Task<IActionResult> Webhook(HttpRequest request)
+        {
+            await _stripe.ProcessWebhookEvent(request);
+            return Ok();
         }
 
     }

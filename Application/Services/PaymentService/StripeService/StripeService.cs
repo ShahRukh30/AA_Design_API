@@ -1,27 +1,39 @@
 ﻿using BusinessLogic.Interfaces.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Models.SupabaseModels.Dto.Payment;
+using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
+using Stripe.Apps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace BusinessLogic.Services.PaymentService.StripeService
 {
     public class StripeService : IStripeService
     {
        private readonly IConfiguration _config;
+       private readonly string _webhookSecret;
+        
+
+    
+
 
         public StripeService(IConfiguration config)
         {
             _config = config;
+            _webhookSecret = "YOUR_STRIPE_WEBHOOK_SECRET";
+           
         }
        
-        public string CreateCheckoutSession(decimal amount, string currency, string productName, string successUrl, string cancelUrl)
+        public string CreateCheckoutSession(decimal amount)
         {
             try
             {
@@ -30,38 +42,40 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
                 var options = new SessionCreateOptions
                 {
-                    // Allowed payment methods
+
                     PaymentMethodTypes = new List<string> { "card" },
 
-                    // List of line items for the checkout session
                     LineItems = new List<SessionLineItemOptions>()
-      {
-        new SessionLineItemOptions
-        {
-          // Price data for the line item
-          PriceData = new SessionLineItemPriceDataOptions
-          {
-            // Amount in cents (multiply by 100)
-            UnitAmount = (long)(amount * 100),
-            Currency = currency,
+                    {
+                        new SessionLineItemOptions
+                        {
 
-            // Product data for the line item
-            ProductData = new SessionLineItemPriceDataProductDataOptions
-            {
-              Name = productName,
-            },
-          },
-          // Quantity of the product (defaults to 1)
-          Quantity = 1,
-        },
-      },
+                            PriceData = new SessionLineItemPriceDataOptions
+                            {
 
-                    // Checkout session mode (payment in this case)
+                                UnitAmount = (long)(amount * 100),
+                                Currency = "usd",
+
+
+                                ProductData = new SessionLineItemPriceDataProductDataOptions
+                                {
+                                    Name = "Your Total",
+                                },
+                            },
+
+                            Quantity = 1,
+                        },
+
+                    },
                     Mode = "payment",
+                    //BillingAddressCollection = "required",
+                    SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
+                    CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
 
-                    // Redirect URLs after checkout success/cancellation
-                    SuccessUrl = successUrl,
-                    CancelUrl = cancelUrl,
+                   
+               
+
+
                 };
 
                 var service = new SessionService();
@@ -76,5 +90,55 @@ namespace BusinessLogic.Services.PaymentService.StripeService
             }
         }
 
+
+
+
+
+        public async Task ProcessWebhookEvent(HttpRequest request)
+        {
+            try
+            {
+                var endpointSecret = "YOUR_STRIPE_WEBHOOK_SECRET"; 
+                var json = await new StreamReader(request.Body).ReadToEndAsync();
+
+                var stripeEvent = EventUtility.ConstructEvent(json,
+                    request.Headers["Stripe-Signature"], endpointSecret);
+
+                switch (stripeEvent.Type)
+                {
+                    case Events.CheckoutSessionCompleted:
+                        var session = stripeEvent.Data.Object as Session;
+                        await HandleCheckoutSessionCompleted(session);
+                        break;
+                    case Events.PaymentIntentSucceeded:
+                        var paymentIntent = stripeEvent.Data.Object as Stripe.PaymentIntent;
+                        await HandlePaymentIntentSucceeded(paymentIntent);
+                        break;
+                   
+                    default:
+                        Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+                        break;
+                }
+
+                return;
+            }
+            catch (StripeException ex)
+            {
+                Console.WriteLine("Error processing Stripe webhook: {0}", ex.Message);
+                throw; 
+            }
+        }
+
+        private async Task HandleCheckoutSessionCompleted(Session session)
+        {
+            
+            Console.WriteLine($"Checkout Session Completed: {session.Id}");
+        }
+
+        private async Task HandlePaymentIntentSucceeded(Stripe.PaymentIntent paymentIntent)
+        { 
+            Console.WriteLine($"Payment Intent Succeeded: {paymentIntent.Id}");
+        }
+
     }
-}
+    }

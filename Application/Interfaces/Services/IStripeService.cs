@@ -1,4 +1,5 @@
-﻿using Models.SupabaseModels.Dto.Payment;
+﻿using Microsoft.AspNetCore.Http;
+using Models.SupabaseModels.Dto.Payment;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace BusinessLogic.Interfaces.Services
 {
     public interface IStripeService
     {
-        string CreateCheckoutSession(decimal amount, string currency, string productName, string successUrl, string cancelUrl);
+        string CreateCheckoutSession(decimal amount);
+        Task ProcessWebhookEvent(HttpRequest request);
     }
 }
