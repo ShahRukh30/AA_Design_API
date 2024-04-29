@@ -98,7 +98,7 @@ namespace BusinessLogic.Services.PaymentService.StripeService
         {
             try
             {
-                var endpointSecret = "YOUR_STRIPE_WEBHOOK_SECRET"; 
+                var endpointSecret = "whsec_GKrTYjUysxcMhmnSqAgmXCnIDp9TfVri\r\n"; 
                 var json = await new StreamReader(request.Body).ReadToEndAsync();
 
                 var stripeEvent = EventUtility.ConstructEvent(json,
