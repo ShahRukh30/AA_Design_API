@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Models.SupabaseModels;
 
+
 public partial class Deliveryadress
 {
     public long Adressid { get; set; }
@@ -13,15 +14,9 @@ public partial class Deliveryadress
 
     public long? Userid { get; set; }
 
-    public long? Stateid { get; set; }
-
-    public long? Cityid { get; set; }
-
-    public virtual City? City { get; set; }
-
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-    public virtual State? State { get; set; }
-
     public virtual User1? User { get; set; }
+
+    
 }

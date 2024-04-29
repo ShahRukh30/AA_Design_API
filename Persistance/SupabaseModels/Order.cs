@@ -13,7 +13,11 @@ public partial class Order
 
     public decimal? Totalprice { get; set; }
 
+    public string? OrderProgress { get; set; }
+
     public virtual Deliveryadress? Address { get; set; }
 
     public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
+
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

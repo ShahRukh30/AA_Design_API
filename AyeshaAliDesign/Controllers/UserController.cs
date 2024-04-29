@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BusinessLogic.Interfaces.Services;
+using BusinessLogic.Interfaces.Services.UserService;
 using BusinessLogic.Services.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;

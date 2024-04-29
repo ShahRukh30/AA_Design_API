@@ -1,5 +1,4 @@
-﻿using BusinessLogic.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Models.SupabaseModels.Dto.Payment;
@@ -14,6 +13,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
+using BusinessLogic.Interfaces.Services.StripService;
 
 namespace BusinessLogic.Services.PaymentService.StripeService
 {

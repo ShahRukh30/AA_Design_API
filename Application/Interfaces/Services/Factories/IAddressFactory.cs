@@ -6,11 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Interfaces.Services
+namespace BusinessLogic.Interfaces.Services.Factories
 {
-    public interface IUserService
+    public interface IAddressFactory
     {
-        Task<User1> Post(UserDto dto);
-        Task<object> Post(LoginDto loginDto);
+        public Deliveryadress CreateAddress(UserDto dto, long userid);
     }
 }

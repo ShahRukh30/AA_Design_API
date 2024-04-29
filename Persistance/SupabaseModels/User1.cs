@@ -15,13 +15,9 @@ public partial class User1
 
     public string? Phone { get; set; }
 
-    public string? Passwordhash { get; set; }
-
-    public long? Roleid { get; set; }
-
     public bool? Isactive { get; set; }
 
     public virtual ICollection<Deliveryadress> Deliveryadresses { get; set; } = new List<Deliveryadress>();
 
-    public virtual Role? Role { get; set; }
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

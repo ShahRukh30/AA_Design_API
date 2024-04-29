@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.SupabaseModels;
 
-namespace BusinessLogic.Interfaces.Services
+namespace BusinessLogic.Interfaces.Services.GenericService
 {
-    public interface IGenericService<T> where T: class
+    public interface IGenericService<T> where T : class
     {
         Task<T> Get(int id);
         Task<IEnumerable<T>> Get();

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Interfaces.Services
+namespace BusinessLogic.Interfaces.Services.RoleService
 {
     public interface IRoleService
     {

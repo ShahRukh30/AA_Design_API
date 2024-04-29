@@ -1,5 +1,5 @@
 ﻿using BusinessLogic.Interfaces.Repositories;
-using BusinessLogic.Interfaces.Services;
+using BusinessLogic.Interfaces.Services.GenericService;
 using System;
 using System.Collections.Generic;
 using System.Linq;

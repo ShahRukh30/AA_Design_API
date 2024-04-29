@@ -1,4 +1,4 @@
-﻿using BusinessLogic.Interfaces.Services;
+﻿using BusinessLogic.Interfaces.Services.StripService;
 using BusinessLogic.Services.PaymentService.StripeService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

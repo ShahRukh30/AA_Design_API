@@ -1,4 +1,5 @@
-﻿using Models.SupabaseModels;
+﻿using BusinessLogic.Interfaces.Services.GenericService;
+using Models.SupabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

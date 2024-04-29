@@ -13,7 +13,7 @@ using BusinessLogic.Services.Utilities.FileStorage;
 using BusinessLogic.Services.Utilities.Identity.Authenticator;
 using BusinessLogic.Services.Utilities.Mapper;
 using DataAccess.Repositories;
-using Infrastructure.Context;
+using DataAccess.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Generic;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,6 +23,10 @@ using Models.SupabaseModels;
 using Stripe;
 using System.Net;
 using System.Text;
+using BusinessLogic.Interfaces.Services.GenericService;
+using BusinessLogic.Interfaces.Services.UserService;
+using BusinessLogic.Interfaces.Services.StripService;
+using BusinessLogic.Interfaces.Services.RoleService;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Models.SupabaseModels.Extras;
 using Models.SupabaseModels;
+using Object = Models.SupabaseModels.Extras.Object;
 
-namespace Infrastructure.Context;
+namespace DataAccess.Context;
 
 public partial class PostgresContext : DbContext
 {
@@ -35,6 +36,8 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<FlowState> FlowStates { get; set; }
 
+    //public virtual DbSet<Hook> Hooks { get; set; }
+
     public virtual DbSet<Identity> Identities { get; set; }
 
     public virtual DbSet<Instance> Instances { get; set; }
@@ -47,11 +50,15 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Migration> Migrations { get; set; }
 
-    public virtual DbSet<Models.SupabaseModels.Extras.Object> Objects { get; set; }
+    //public virtual DbSet<Migration1> Migrations1 { get; set; }
+
+    public virtual DbSet<Object> Objects { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<Orderitem> Orderitems { get; set; }
+
+    public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<Presence> Presences { get; set; }
 
@@ -66,6 +73,10 @@ public partial class PostgresContext : DbContext
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
+
+    //public virtual DbSet<S3MultipartUpload> S3MultipartUploads { get; set; }
+
+    //public virtual DbSet<S3MultipartUploadsPart> S3MultipartUploadsParts { get; set; }
 
     public virtual DbSet<SamlProvider> SamlProviders { get; set; }
 
@@ -101,10 +112,12 @@ public partial class PostgresContext : DbContext
             .HasPostgresEnum("auth", "code_challenge_method", new[] { "s256", "plain" })
             .HasPostgresEnum("auth", "factor_status", new[] { "unverified", "verified" })
             .HasPostgresEnum("auth", "factor_type", new[] { "totp", "webauthn" })
+            .HasPostgresEnum("net", "request_status", new[] { "PENDING", "SUCCESS", "ERROR" })
             .HasPostgresEnum("pgsodium", "key_status", new[] { "default", "valid", "invalid", "expired" })
             .HasPostgresEnum("pgsodium", "key_type", new[] { "aead-ietf", "aead-det", "hmacsha512", "hmacsha256", "auth", "shorthash", "generichash", "kdf", "secretbox", "secretstream", "stream_xchacha20" })
             .HasPostgresEnum("realtime", "action", new[] { "INSERT", "UPDATE", "DELETE", "TRUNCATE", "ERROR" })
             .HasPostgresEnum("realtime", "equality_op", new[] { "eq", "neq", "lt", "lte", "gt", "gte", "in" })
+            .HasPostgresExtension("extensions", "pg_net")
             .HasPostgresExtension("extensions", "pg_stat_statements")
             .HasPostgresExtension("extensions", "pgcrypto")
             .HasPostgresExtension("extensions", "pgjwt")
@@ -145,9 +158,6 @@ public partial class PostgresContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ChannelId).HasColumnName("channel_id");
-            entity.Property(e => e.Check)
-                .HasDefaultValue(false)
-                .HasColumnName("check");
             entity.Property(e => e.InsertedAt)
                 .HasColumnType("timestamp(0) without time zone")
                 .HasColumnName("inserted_at");
@@ -199,9 +209,6 @@ public partial class PostgresContext : DbContext
             entity.HasIndex(e => e.Name, "channels_name_index").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Check)
-                .HasDefaultValue(false)
-                .HasColumnName("check");
             entity.Property(e => e.InsertedAt)
                 .HasColumnType("timestamp(0) without time zone")
                 .HasColumnName("inserted_at");
@@ -255,19 +262,9 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Adressid)
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("adressid");
-            entity.Property(e => e.Cityid).HasColumnName("cityid");
             entity.Property(e => e.Deliveryaddress).HasColumnName("deliveryaddress");
-            entity.Property(e => e.Stateid).HasColumnName("stateid");
             entity.Property(e => e.Userid).HasColumnName("userid");
             entity.Property(e => e.Zipcode).HasColumnName("zipcode");
-
-            entity.HasOne(d => d.City).WithMany(p => p.Deliveryadresses)
-                .HasForeignKey(d => d.Cityid)
-                .HasConstraintName("deliveryadress_cityid_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.Deliveryadresses)
-                .HasForeignKey(d => d.Stateid)
-                .HasConstraintName("deliveryadress_stateid_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Deliveryadresses)
                 .HasForeignKey(d => d.Userid)
@@ -319,6 +316,25 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });
+
+        //modelBuilder.Entity<Hook>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("hooks_pkey");
+
+        //    entity.ToTable("hooks", "supabase_functions", tb => tb.HasComment("Supabase Functions Hooks: Audit trail for triggered hooks."));
+
+        //    entity.HasIndex(e => new { e.HookTableId, e.HookName }, "supabase_functions_hooks_h_table_id_h_name_idx");
+
+        //    entity.HasIndex(e => e.RequestId, "supabase_functions_hooks_request_id_idx");
+
+        //    entity.Property(e => e.Id).HasColumnName("id");
+        //    entity.Property(e => e.CreatedAt)
+        //        .HasDefaultValueSql("now()")
+        //        .HasColumnName("created_at");
+        //    entity.Property(e => e.HookName).HasColumnName("hook_name");
+        //    entity.Property(e => e.HookTableId).HasColumnName("hook_table_id");
+        //    entity.Property(e => e.RequestId).HasColumnName("request_id");
+        //});
 
         modelBuilder.Entity<Identity>(entity =>
         {
@@ -462,13 +478,27 @@ public partial class PostgresContext : DbContext
                 .HasColumnName("name");
         });
 
-        modelBuilder.Entity<Models.SupabaseModels.Extras.Object>(entity =>
+        //modelBuilder.Entity<Migration1>(entity =>
+        //{
+        //    entity.HasKey(e => e.Version).HasName("migrations_pkey");
+
+        //    entity.ToTable("migrations", "supabase_functions");
+
+        //    entity.Property(e => e.Version).HasColumnName("version");
+        //    entity.Property(e => e.InsertedAt)
+        //        .HasDefaultValueSql("now()")
+        //        .HasColumnName("inserted_at");
+        //});
+
+        modelBuilder.Entity<Object>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("objects_pkey");
 
             entity.ToTable("objects", "storage");
 
             entity.HasIndex(e => new { e.BucketId, e.Name }, "bucketid_objname").IsUnique();
+
+            entity.HasIndex(e => new { e.BucketId, e.Name }, "idx_objects_bucket_id_name").UseCollation(new[] { null, "C" });
 
             entity.HasIndex(e => e.Name, "name_prefix_search").HasOperators(new[] { "text_pattern_ops" });
 
@@ -543,6 +573,29 @@ public partial class PostgresContext : DbContext
                 .HasConstraintName("orderitems_productid_fkey");
         });
 
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.HasKey(e => e.Paymentid).HasName("payment_pkey");
+
+            entity.ToTable("payment");
+
+            entity.Property(e => e.Paymentid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("paymentid");
+            entity.Property(e => e.Orderid).HasColumnName("orderid");
+            entity.Property(e => e.Paymentstatus).HasColumnName("paymentstatus");
+            entity.Property(e => e.Paymenttimestamp).HasColumnName("paymenttimestamp");
+            entity.Property(e => e.Userid).HasColumnName("userid");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.Orderid)
+                .HasConstraintName("payment_orderid_fkey");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.Userid)
+                .HasConstraintName("payment_userid_fkey");
+        });
+
         modelBuilder.Entity<Presence>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("presences_pkey");
@@ -553,9 +606,6 @@ public partial class PostgresContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ChannelId).HasColumnName("channel_id");
-            entity.Property(e => e.Check)
-                .HasDefaultValue(false)
-                .HasColumnName("check");
             entity.Property(e => e.InsertedAt)
                 .HasColumnType("timestamp(0) without time zone")
                 .HasColumnName("inserted_at");
@@ -567,7 +617,6 @@ public partial class PostgresContext : DbContext
                 .HasForeignKey<Presence>(d => d.ChannelId)
                 .HasConstraintName("presences_channel_id_fkey");
         });
-
 
         modelBuilder.Entity<Product>(entity =>
         {
@@ -602,7 +651,6 @@ public partial class PostgresContext : DbContext
                 .HasColumnName("productcategoryid");
             entity.Property(e => e.Productcategory1).HasColumnName("productcategory");
         });
-
 
         modelBuilder.Entity<Productimage>(entity =>
         {
@@ -696,6 +744,70 @@ public partial class PostgresContext : DbContext
                 .HasColumnName("roleid");
             entity.Property(e => e.Rolename).HasColumnName("rolename");
         });
+
+        //modelBuilder.Entity<S3MultipartUpload>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("s3_multipart_uploads_pkey");
+
+        //    entity.ToTable("s3_multipart_uploads", "storage");
+
+        //    entity.HasIndex(e => new { e.BucketId, e.Key, e.CreatedAt }, "idx_multipart_uploads_list").UseCollation(new[] { null, "C", null });
+
+        //    entity.Property(e => e.Id).HasColumnName("id");
+        //    entity.Property(e => e.BucketId).HasColumnName("bucket_id");
+        //    entity.Property(e => e.CreatedAt)
+        //        .HasDefaultValueSql("now()")
+        //        .HasColumnName("created_at");
+        //    entity.Property(e => e.InProgressSize)
+        //        .HasDefaultValue(0L)
+        //        .HasColumnName("in_progress_size");
+        //    entity.Property(e => e.Key)
+        //        .UseCollation("C")
+        //        .HasColumnName("key");
+        //    entity.Property(e => e.OwnerId).HasColumnName("owner_id");
+        //    entity.Property(e => e.UploadSignature).HasColumnName("upload_signature");
+        //    entity.Property(e => e.Version).HasColumnName("version");
+
+        //    entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploads)
+        //        .HasForeignKey(d => d.BucketId)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("s3_multipart_uploads_bucket_id_fkey");
+        //});
+
+        //modelBuilder.Entity<S3MultipartUploadsPart>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("s3_multipart_uploads_parts_pkey");
+
+        //    entity.ToTable("s3_multipart_uploads_parts", "storage");
+
+        //    entity.Property(e => e.Id)
+        //        .HasDefaultValueSql("gen_random_uuid()")
+        //        .HasColumnName("id");
+        //    entity.Property(e => e.BucketId).HasColumnName("bucket_id");
+        //    entity.Property(e => e.CreatedAt)
+        //        .HasDefaultValueSql("now()")
+        //        .HasColumnName("created_at");
+        //    entity.Property(e => e.Etag).HasColumnName("etag");
+        //    entity.Property(e => e.Key)
+        //        .UseCollation("C")
+        //        .HasColumnName("key");
+        //    entity.Property(e => e.OwnerId).HasColumnName("owner_id");
+        //    entity.Property(e => e.PartNumber).HasColumnName("part_number");
+        //    entity.Property(e => e.Size)
+        //        .HasDefaultValue(0L)
+        //        .HasColumnName("size");
+        //    entity.Property(e => e.UploadId).HasColumnName("upload_id");
+        //    entity.Property(e => e.Version).HasColumnName("version");
+
+        //    entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploadsParts)
+        //        .HasForeignKey(d => d.BucketId)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("s3_multipart_uploads_parts_bucket_id_fkey");
+
+        //    entity.HasOne(d => d.Upload).WithMany(p => p.S3MultipartUploadsParts)
+        //        .HasForeignKey(d => d.UploadId)
+        //        .HasConstraintName("s3_multipart_uploads_parts_upload_id_fkey");
+        //});
 
         modelBuilder.Entity<SamlProvider>(entity =>
         {
@@ -1032,13 +1144,7 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Firstname).HasColumnName("firstname");
             entity.Property(e => e.Isactive).HasColumnName("isactive");
             entity.Property(e => e.Lastname).HasColumnName("lastname");
-            entity.Property(e => e.Passwordhash).HasColumnName("passwordhash");
             entity.Property(e => e.Phone).HasColumnName("phone");
-            entity.Property(e => e.Roleid).HasColumnName("roleid");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.User1s)
-                .HasForeignKey(d => d.Roleid)
-                .HasConstraintName("users_roleid_fkey");
         });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
 

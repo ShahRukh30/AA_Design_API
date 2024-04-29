@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.Interfaces.Repositories;
-using BusinessLogic.Interfaces.Services;
 using BusinessLogic.Interfaces.Services.Factories;
+using BusinessLogic.Interfaces.Services.UserService;
 using BusinessLogic.Interfaces.Services.Utilites;
 using Microsoft.Extensions.Configuration;
 using Models.SupabaseModels;

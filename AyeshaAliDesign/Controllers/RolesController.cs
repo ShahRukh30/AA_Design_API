@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BusinessLogic.Interfaces.Services;
+using BusinessLogic.Interfaces.Services.GenericService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.SupabaseModels;

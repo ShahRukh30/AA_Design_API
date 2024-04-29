@@ -16,14 +16,11 @@ namespace BusinessLogic.Services.Utilities.Factories.User
                Firstname=users.Firstname,
                Lastname=users.Lastname,
                Email=users.Email,
-               Passwordhash= BCrypt.Net.BCrypt.HashPassword(users.Passwordhash),
                Phone = users.Phone,
 
             };
 
             user.Isactive = false;
-            user.Roleid = 2;
-
 
             return user;
         }

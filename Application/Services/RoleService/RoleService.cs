@@ -1,5 +1,5 @@
 ﻿using BusinessLogic.Interfaces.Repositories;
-using BusinessLogic.Interfaces.Services;
+using BusinessLogic.Interfaces.Services.RoleService;
 using Models.SupabaseModels;
 using System;
 using System.Collections.Generic;
