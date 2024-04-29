@@ -79,7 +79,6 @@ builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductServic
 
 builder.Services.AddScoped<IProductSizeService,ProductSizeService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddTransient<IAuthenticator, Authenticator>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();
 builder.Services.AddTransient<IStripeService, StripeService>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();

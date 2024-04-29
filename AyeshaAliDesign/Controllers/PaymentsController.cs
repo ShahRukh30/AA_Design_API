@@ -21,9 +21,9 @@ namespace API.Controllers
         
 
         [HttpGet("CheckoutSession")]
-        public string getsession(decimal amount)
+        public string getsession(decimal amount,string email,long orderid)
         {
-            return _stripe.CreateCheckoutSession(amount);
+            return _stripe.CreateCheckoutSession(amount,email,orderid);
         }
 
         [HttpPost("Payment-Event")]

@@ -20,13 +20,13 @@ namespace BusinessLogic.Services.UserService
         private readonly IMapper _mapper;
         private readonly IGenericRepository<User1> _gen;
         private readonly IUserFactory _userFactory;
-        private readonly IAuthenticator _auth;
+    
         private readonly IConfiguration _config;
 
-        public UserService(IMapper mapper,IGenericRepository<User1> gen,IUserFactory userFactory,  IConfiguration config, IAuthenticator auth)
+        public UserService(IMapper mapper,IGenericRepository<User1> gen,IUserFactory userFactory,  IConfiguration config)
         { 
             _gen = gen;
-            _auth = auth;
+            
             _config = config;
             _mapper = mapper;
             _userFactory = userFactory;
@@ -41,8 +41,8 @@ namespace BusinessLogic.Services.UserService
 
         public async Task<object> Post(LoginDto loginDto)
         {
-            var a= await _auth.Tokenization(loginDto);
-            return a;
+
+            return null;
         }
     }
 }

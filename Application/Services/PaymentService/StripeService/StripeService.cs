@@ -33,7 +33,7 @@ namespace BusinessLogic.Services.PaymentService.StripeService
            
         }
        
-        public string CreateCheckoutSession(decimal amount)
+        public string CreateCheckoutSession(decimal amount,string email,long orderid)
         {
             try
             {
@@ -72,11 +72,16 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                     SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
                     CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
 
-                   
-               
+                    Metadata = new Dictionary<string, string>
+                {
+                    { "orderid", orderid.ToString() } // Add orderid to metadata
+                },
+                    CustomerEmail = email // Populate email field with passed parameter
+                
 
 
-                };
+
+            };
 
                 var service = new SessionService();
                 var session = service.Create(options);

@@ -1,5 +1,5 @@
 ﻿using BusinessLogic.Interfaces.Repositories;
-using Infrastructure.Context;
+using DataAccess.Context;
 using Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using Models.SupabaseModels;
