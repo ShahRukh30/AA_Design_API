@@ -26,12 +26,13 @@ namespace BusinessLogic.Services.CheckoutService
         private readonly IOrderItemService _orderitem;
         private readonly IStripeService _stripe;
         public CheckoutService(IUserService user, IAddressService address, IGenericRepository<Models.SupabaseModels.Order> gen,
-            IOrderItemService orderItem,IStripeService stripe) {
+            IOrderItemService orderItem, IStripeService stripe, IMapper mapper) {
             _user= user;
             _address= address;
             _gen= gen;
             _orderitem=orderItem;
             _stripe =stripe;
+            _mapper=mapper;
         }
 
         public async Task<long> Post(UserDto user)
@@ -41,7 +42,7 @@ namespace BusinessLogic.Services.CheckoutService
             return addressfinal.Adressid;
         }
 
-        public async Task<string> Post(OrderDto dto,long orderid)
+        public async Task<string> Post(OrderDto dto)
         {
             Models.SupabaseModels.Order order = _mapper.Map<Models.SupabaseModels.Order>(dto);
             order = await _gen.Post(order);

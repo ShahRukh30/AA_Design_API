@@ -11,6 +11,6 @@ namespace BusinessLogic.Interfaces.Services.CheckoutService
    public interface ICheckoutService
     {
         Task<long> Post(UserDto user);
-        Task<string> Post(OrderDto dto, long orderid);
+        Task<string> Post(OrderDto dto);
     }
 }

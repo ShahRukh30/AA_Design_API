@@ -30,8 +30,7 @@ namespace BusinessLogic.Services.Utilities.Mapper
             CreateMap<Models.SupabaseModels.Order, OrderDto>();
             CreateMap<Orderitem, OrderItemDto>();
             CreateMap<OrderItemDto, Orderitem>();
-            CreateMap<List<Orderitem>, List<OrderItemDto>>();
-            CreateMap<List<OrderItemDto>, List<Orderitem>>();
+            
 
 
         }

@@ -27,6 +27,14 @@ using BusinessLogic.Interfaces.Services.GenericService;
 using BusinessLogic.Interfaces.Services.UserService;
 using BusinessLogic.Interfaces.Services.StripService;
 using BusinessLogic.Interfaces.Services.RoleService;
+using BusinessLogic.Services.Utilities.Factories.Payment;
+using BusinessLogic.Services.Utilities.Factories.Address;
+using BusinessLogic.Interfaces.Services.Order;
+using BusinessLogic.Services.Order;
+using BusinessLogic.Interfaces.Services.CheckoutService;
+using BusinessLogic.Services.CheckoutService;
+using BusinessLogic.Interfaces.Services.AddressService;
+using BusinessLogic.Services.AddressService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,11 +84,15 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductService.ProductService>();
-
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IProductSizeService,ProductSizeService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();
+builder.Services.AddScoped<IPaymentFactory, PaymentFactory>();
+builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 builder.Services.AddTransient<IStripeService, StripeService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();

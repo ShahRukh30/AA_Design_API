@@ -591,9 +591,9 @@ public partial class PostgresContext : DbContext
                 .HasForeignKey(d => d.Orderid)
                 .HasConstraintName("payment_orderid_fkey");
 
-            //entity.HasOne(d => d.User).WithMany(p => p.Payments)
-            //    .HasForeignKey(d => d.Userid)
-            //    .HasConstraintName("payment_userid_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.Userid)
+                .HasConstraintName("payment_userid_fkey");
         });
 
         modelBuilder.Entity<Presence>(entity =>

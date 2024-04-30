@@ -22,9 +22,9 @@ namespace API.Controllers
 
 
         [HttpPost("checkout-session")]
-        public async Task<string> Getsession(OrderDto dto, long orderid)
+        public async Task<string> Getsession(OrderDto dto)
         {
-            return await _checkout.Post(dto, orderid);
+            return await _checkout.Post(dto);
         }
 
         [HttpPost("checkout-prepare")]
