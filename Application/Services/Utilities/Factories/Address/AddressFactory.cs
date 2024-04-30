@@ -19,6 +19,8 @@ namespace BusinessLogic.Services.Utilities.Factories.Address
                 Userid = userid,
                 Deliveryaddress = dto.State+" "+dto.City+" "+dto.Street+" "+dto.Address,
                 Zipcode=dto.PostalCode,
+                Cityid=1947,
+                Stateid=52,
 
             };
 

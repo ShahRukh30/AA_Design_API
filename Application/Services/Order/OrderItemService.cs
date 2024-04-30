@@ -16,22 +16,24 @@ namespace BusinessLogic.Services.Order
         private readonly IGenericRepository<Orderitem> _gen;
         private readonly IMapper _mapper;
 
-        public OrderItemService(IGenericRepository<Orderitem> gen)
+        public OrderItemService(IGenericRepository<Orderitem> gen, IMapper mapper)
         {
             _gen=gen;
+            _mapper=mapper;
         }
 
-        public async Task<List<Orderitem>> Post(List<OrderItemDto> list ,long orderid)
+        public async Task<List<OrderItemDto>> Post(List<OrderItemDto> list ,long orderid)
         {
-            List<Orderitem> orderitems = _mapper.Map<List<Orderitem>>(list);
+          
 
-            foreach (var item in orderitems)
+            foreach (var item in list)
             {
-                item.Orderid = orderid;
-                await _gen.Post(item);
+                Orderitem a=_mapper.Map<Orderitem>(item);
+                a.Orderid = orderid;
+                await _gen.Post(a);
             }
 
-            return orderitems;
+            return list;
         }
     }
 }

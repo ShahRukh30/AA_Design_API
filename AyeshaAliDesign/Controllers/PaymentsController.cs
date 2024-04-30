@@ -29,7 +29,7 @@ namespace API.Controllers
         [HttpPost("Payment-Event")]
         public async Task<IActionResult> Webhook(HttpRequest request)
         {
-            await _stripe.ProcessWebhookEvent(request);
+            await _stripe.PaymnentWebHook(request);
             return Ok();
         }
 

@@ -17,6 +17,7 @@ namespace BusinessLogic.Services.Utilities.Factories.User
                Lastname=users.Lastname,
                Email=users.Email,
                Phone = users.Phone,
+               Roleid=2
 
             };
 

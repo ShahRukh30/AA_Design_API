@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.Interfaces.Repositories;
 using BusinessLogic.Interfaces.Services.AddressService;
+using BusinessLogic.Interfaces.Services.CheckoutService;
 using BusinessLogic.Interfaces.Services.Order;
 using BusinessLogic.Interfaces.Services.StripService;
 using BusinessLogic.Interfaces.Services.UserService;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Services.CheckoutService
 {
-    public class CheckoutService
+    public class CheckoutService:ICheckoutService
     {
 
         private readonly IUserService _user;
@@ -25,27 +26,29 @@ namespace BusinessLogic.Services.CheckoutService
         private readonly IOrderItemService _orderitem;
         private readonly IStripeService _stripe;
         public CheckoutService(IUserService user, IAddressService address, IGenericRepository<Models.SupabaseModels.Order> gen,
-            IOrderItemService orderItem,IStripeService stripe) {
+            IOrderItemService orderItem, IStripeService stripe, IMapper mapper) {
             _user= user;
             _address= address;
             _gen= gen;
             _orderitem=orderItem;
             _stripe =stripe;
+            _mapper=mapper;
         }
 
         public async Task<long> Post(UserDto user)
         {
-            User1 userdetail = await _user.Post(user);
-            Deliveryadress addressfinal = await _address.Post(user, userdetail.Userid);
+           User1 users = await _user.Post(user);
+            Deliveryadress addressfinal = await _address.Post(user, users.Userid);
             return addressfinal.Adressid;
         }
 
-        public async Task<string> Post(OrderDto dto,int orderid)
+        public async Task<string> Post(OrderDto dto)
         {
             Models.SupabaseModels.Order order = _mapper.Map<Models.SupabaseModels.Order>(dto);
             order = await _gen.Post(order);
+            order.Dispatchid = Guid.NewGuid().ToString();
+            order.OrderProgress = "Pending";
             await _orderitem.Post(dto.OrderItemss, order.Orderid);
-
             return _stripe.CreateCheckoutSession(dto.Totalprice,dto.Email,order.Orderid);
 
         }

@@ -50,7 +50,7 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Migration> Migrations { get; set; }
 
-    //public virtual DbSet<Migration1> Migrations1 { get; set; }
+    public virtual DbSet<Migration1> Migrations1 { get; set; }
 
     public virtual DbSet<Object> Objects { get; set; }
 
@@ -262,9 +262,19 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Adressid)
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("adressid");
+            entity.Property(e => e.Cityid).HasColumnName("cityid");
             entity.Property(e => e.Deliveryaddress).HasColumnName("deliveryaddress");
+            entity.Property(e => e.Stateid).HasColumnName("stateid");
             entity.Property(e => e.Userid).HasColumnName("userid");
             entity.Property(e => e.Zipcode).HasColumnName("zipcode");
+
+            entity.HasOne(d => d.City).WithMany(p => p.Deliveryadresses)
+                .HasForeignKey(d => d.Cityid)
+                .HasConstraintName("deliveryadress_cityid_fkey");
+
+            entity.HasOne(d => d.State).WithMany(p => p.Deliveryadresses)
+                .HasForeignKey(d => d.Stateid)
+                .HasConstraintName("deliveryadress_stateid_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Deliveryadresses)
                 .HasForeignKey(d => d.Userid)
@@ -478,17 +488,17 @@ public partial class PostgresContext : DbContext
                 .HasColumnName("name");
         });
 
-        //modelBuilder.Entity<Migration1>(entity =>
-        //{
-        //    entity.HasKey(e => e.Version).HasName("migrations_pkey");
+        modelBuilder.Entity<Migration1>(entity =>
+        {
+            entity.HasKey(e => e.Version).HasName("migrations_pkey");
 
-        //    entity.ToTable("migrations", "supabase_functions");
+            entity.ToTable("migrations", "supabase_functions");
 
-        //    entity.Property(e => e.Version).HasColumnName("version");
-        //    entity.Property(e => e.InsertedAt)
-        //        .HasDefaultValueSql("now()")
-        //        .HasColumnName("inserted_at");
-        //});
+            entity.Property(e => e.Version).HasColumnName("version");
+            entity.Property(e => e.InsertedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("inserted_at");
+        });
 
         modelBuilder.Entity<Object>(entity =>
         {
@@ -1145,7 +1155,14 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Isactive).HasColumnName("isactive");
             entity.Property(e => e.Lastname).HasColumnName("lastname");
             entity.Property(e => e.Phone).HasColumnName("phone");
-        });
+            entity.Property(e => e.Roleid).HasColumnName("roleid");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.User1s)
+                .HasForeignKey(d => d.Roleid)
+                .HasConstraintName("users_roleid_fkey");
+        
+
+    });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
 
         OnModelCreatingPartial(modelBuilder);

@@ -12,6 +12,7 @@ namespace BusinessLogic.Interfaces.Repositories
     public interface IUserRepository : IGenericRepository<User1>
     {
          Task<User1> GetCred(LoginDto cred);
-       
+        Task<long> GetUserID(string mail);
+        Task<long> CreateUser(User1 user);
     }
 }

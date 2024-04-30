@@ -21,17 +21,17 @@ namespace API.Controllers
             _userService = uservice;
         }
 
-        [HttpPost("Login")]
-        public Task<object> Login(LoginDto dto)
-        {
-            return _userService.Post(dto);
-        }
+        //[HttpPost("Login")]
+        //public Task<object> Login(LoginDto dto)
+        //{
+        //    return _userService.Post(dto);
+        //}
 
 
-        [HttpPost("Register")]
-        public Task<User1> Register([FromBody] UserDto dto)
-        {
-            return _userService.Post(dto);
-        }
+        //[HttpPost("Register")]
+        //public Task<User1> Register([FromBody] UserDto dto)
+        //{
+        //    return _userService.Post(dto);
+        //}
     }
 }

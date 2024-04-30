@@ -10,6 +10,6 @@ namespace BusinessLogic.Interfaces.Services.Order
 {
     public interface IOrderItemService
     {
-        Task<List<Orderitem>> Post(List<OrderItemDto> list, long orderid);
+        Task<List<OrderItemDto>> Post(List<OrderItemDto> list, long orderid);
     }
 }
