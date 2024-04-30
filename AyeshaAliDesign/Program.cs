@@ -120,7 +120,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapGet("/", () => "Server is running!");
+app.MapGet("/", () => "Server is running.Dev");
 
 
 app.UseHttpsRedirection();
