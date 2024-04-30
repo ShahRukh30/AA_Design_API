@@ -20,6 +20,7 @@ namespace BusinessLogic.Services.UserService
         private readonly IMapper _mapper;
         private readonly IGenericRepository<User1> _gen;
         private readonly IUserFactory _userFactory;
+        private readonly IUserRepository _userRepository;
     
         private readonly IConfiguration _config;
 
@@ -39,6 +40,10 @@ namespace BusinessLogic.Services.UserService
             return _gen.Post(user);
         }
 
+        public async Task<long> Get(string mail)
+        {
+            return await _userRepository.GetUserID(mail);
+        }
         public async Task<object> Post(LoginDto loginDto)
         {
 

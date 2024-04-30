@@ -37,6 +37,16 @@ namespace DataAccess.Repositories
                 throw new InvalidOperationException("User not found or invalid password.");
             }
         }
+
+
+        public async Task<long> GetUserID(string mail)
+        {
+            IQueryable<User1> cs=_appcontext.Users1.Where(u=>u.Email == mail);
+
+            User1 found_user = await cs.FirstAsync();
+            return found_user.Userid;
+
+        }
     }
     }
 

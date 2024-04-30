@@ -44,8 +44,9 @@ namespace BusinessLogic.Services.CheckoutService
         {
             Models.SupabaseModels.Order order = _mapper.Map<Models.SupabaseModels.Order>(dto);
             order = await _gen.Post(order);
+            order.Dispatchid = Guid.NewGuid().ToString();
+            order.OrderProgress = "Pending";
             await _orderitem.Post(dto.OrderItemss, order.Orderid);
-
             return _stripe.CreateCheckoutSession(dto.Totalprice,dto.Email,order.Orderid);
 
         }

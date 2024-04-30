@@ -12,5 +12,6 @@ namespace BusinessLogic.Interfaces.Services.UserService
     {
         Task<User1> Post(UserDto dto);
         Task<object> Post(LoginDto loginDto);
+        Task<long> Get(string mail);
     }
 }

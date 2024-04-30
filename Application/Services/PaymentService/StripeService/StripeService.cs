@@ -19,33 +19,31 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 {
     public class StripeService : IStripeService
     {
-       private readonly IConfiguration _config;
-       private readonly string _webhookSecret;
-        
+        private readonly IConfiguration _config;
+        private readonly string _webhookSecret;
 
-    
+
+
 
 
         public StripeService(IConfiguration config)
         {
             _config = config;
             _webhookSecret = "YOUR_STRIPE_WEBHOOK_SECRET";
-           
+
         }
-       
-        public string CreateCheckoutSession(decimal amount,string email,long orderid)
+
+        public string CreateCheckoutSession(decimal amount, string email, long orderid)
         {
-            try
+
+            StripeConfiguration.ApiKey = "sk_test_51OrJFLBCehTATMfqQyHN1bZQVkGVzxJyNi52rNX8Ipmhbb9T1WOhiU33LzdP5c0wmswM8qMMNUpUdHWE7xE9Xsv700NxoIWKT5";
+
+            var options = new SessionCreateOptions
             {
-                // Replace with your actual Stripe secret key
-                StripeConfiguration.ApiKey = "sk_test_51OrJFLBCehTATMfqQyHN1bZQVkGVzxJyNi52rNX8Ipmhbb9T1WOhiU33LzdP5c0wmswM8qMMNUpUdHWE7xE9Xsv700NxoIWKT5";
 
-                var options = new SessionCreateOptions
-                {
+                PaymentMethodTypes = new List<string> { "card" },
 
-                    PaymentMethodTypes = new List<string> { "card" },
-
-                    LineItems = new List<SessionLineItemOptions>()
+                LineItems = new List<SessionLineItemOptions>()
                     {
                         new SessionLineItemOptions
                         {
@@ -67,83 +65,61 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                         },
 
                     },
-                    Mode = "payment",
-                    //BillingAddressCollection = "required",
-                    SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
-                    CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
+                Mode = "payment",
+                //BillingAddressCollection = "required",
+                SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
+                CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
 
-                    Metadata = new Dictionary<string, string>
+                Metadata = new Dictionary<string, string>
                 {
                     { "orderid", orderid.ToString() } // Add orderid to metadata
                 },
-                    CustomerEmail = email // Populate email field with passed parameter
-                
+                CustomerEmail = email // Populate email field with passed parameter
+
 
 
 
             };
 
-                var service = new SessionService();
-                var session = service.Create(options);
+            var service = new SessionService();
+            var session = service.Create(options);
 
-                return session.Url;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it differently based on your needs
-                throw new Exception($"Failed to create checkout session: {ex.Message}");
-            }
+            return session.Url;
+        }
+
+        string IStripeService.CreateCheckoutSession(decimal amount, string email, long orderid)
+        {
+            throw new NotImplementedException();
         }
 
 
 
 
 
-        public async Task ProcessWebhookEvent(HttpRequest request)
+
+
+        public async Task PaymnentWebHook(HttpRequest request)
         {
-            try
+
+            var endpointSecret = "whsec_GKrTYjUysxcMhmnSqAgmXCnIDp9TfVri\r\n";
+            var json = await new StreamReader(request.Body).ReadToEndAsync();
+
+            var stripeEvent = EventUtility.ConstructEvent(json,
+                request.Headers["Stripe-Signature"], endpointSecret);
+
+            if (stripeEvent.Type == Events.CheckoutSessionCompleted)
             {
-                var endpointSecret = "whsec_GKrTYjUysxcMhmnSqAgmXCnIDp9TfVri\r\n"; 
-                var json = await new StreamReader(request.Body).ReadToEndAsync();
-
-                var stripeEvent = EventUtility.ConstructEvent(json,
-                    request.Headers["Stripe-Signature"], endpointSecret);
-
-                switch (stripeEvent.Type)
+                if (stripeEvent.Type == Events.PaymentIntentSucceeded)
                 {
-                    case Events.CheckoutSessionCompleted:
-                        var session = stripeEvent.Data.Object as Session;
-                        await HandleCheckoutSessionCompleted(session);
-                        break;
-                    case Events.PaymentIntentSucceeded:
-                        var paymentIntent = stripeEvent.Data.Object as Stripe.PaymentIntent;
-                        await HandlePaymentIntentSucceeded(paymentIntent);
-                        break;
-                   
-                    default:
-                        Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
-                        break;
+
                 }
 
-                return;
             }
-            catch (StripeException ex)
-            {
-                Console.WriteLine("Error processing Stripe webhook: {0}", ex.Message);
-                throw; 
-            }
+
+
         }
 
-        private async Task HandleCheckoutSessionCompleted(Session session)
-        {
-            
-            Console.WriteLine($"Checkout Session Completed: {session.Id}");
-        }
 
-        private async Task HandlePaymentIntentSucceeded(Stripe.PaymentIntent paymentIntent)
-        { 
-            Console.WriteLine($"Payment Intent Succeeded: {paymentIntent.Id}");
-        }
 
     }
-    }
+}
