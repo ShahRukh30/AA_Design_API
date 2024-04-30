@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Interfaces.Repositories;
+﻿using API.DB;
+using BusinessLogic.Interfaces.Repositories;
 using DataAccess.Context;
 using Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
-    public class UserRepository : GenericRepo<User1>, IUserRepository
+    public class UserRepository : GenericRepo<Models.SupabaseModels.User1>, IUserRepository
     {
         private readonly PostgresContext _appcontext;
         public UserRepository(PostgresContext appcontext) : base(appcontext)
@@ -22,11 +23,11 @@ namespace DataAccess.Repositories
         }
 
 
-        public async Task<User1> GetCred(LoginDto cred)
+        public async Task<Models.SupabaseModels.User1> GetCred(LoginDto cred)
         {
-            IQueryable<User1> cs = _appcontext.Users1.Where(u => u.Email == cred.Email);
+            IQueryable<Models.SupabaseModels.User1> cs = _appcontext.Users1.Where(u => u.Email == cred.Email);
 
-            User1 found_user = await cs.FirstAsync();
+            Models.SupabaseModels.User1 found_user = await cs.FirstAsync();
 
             if (found_user != null)
             {
@@ -41,9 +42,9 @@ namespace DataAccess.Repositories
 
         public async Task<long> GetUserID(string mail)
         {
-            IQueryable<User1> cs=_appcontext.Users1.Where(u=>u.Email == mail);
+            IQueryable<Models.SupabaseModels.User1> cs=_appcontext.Users1.Where(u=>u.Email == mail);
 
-            User1 found_user = await cs.FirstAsync();
+            Models.SupabaseModels.User1 found_user = await cs.FirstAsync();
             return found_user.Userid;
 
         }

@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Dependencies\" />
+    <Folder Include="DB\" />
   </ItemGroup>
 
 </Project>

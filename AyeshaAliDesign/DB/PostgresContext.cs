@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using API.DB;
-using Models.DB.Extras;
 
-namespace DataAccess.Context;
+namespace API.DB;
 
 public partial class PostgresContext : DbContext
 {
@@ -51,7 +49,7 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Migration1> Migrations1 { get; set; }
 
-    public virtual DbSet<Models.SupabaseModels.Extras.Object> Objects { get; set; }
+    public virtual DbSet<Object> Objects { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
@@ -489,7 +487,7 @@ public partial class PostgresContext : DbContext
                 .HasColumnName("inserted_at");
         });
 
-        modelBuilder.Entity<Models.SupabaseModels.Extras.Object>(entity =>
+        modelBuilder.Entity<Object>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("objects_pkey");
 
@@ -767,10 +765,10 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.UploadSignature).HasColumnName("upload_signature");
             entity.Property(e => e.Version).HasColumnName("version");
 
-            //entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploads)
-            //    .HasForeignKey(d => d.BucketId)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("s3_multipart_uploads_bucket_id_fkey");
+            entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploads)
+                .HasForeignKey(d => d.BucketId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("s3_multipart_uploads_bucket_id_fkey");
         });
 
         modelBuilder.Entity<S3MultipartUploadsPart>(entity =>
@@ -798,10 +796,10 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.UploadId).HasColumnName("upload_id");
             entity.Property(e => e.Version).HasColumnName("version");
 
-            //entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploadsParts)
-            //    .HasForeignKey(d => d.BucketId)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("s3_multipart_uploads_parts_bucket_id_fkey");
+            entity.HasOne(d => d.Bucket).WithMany(p => p.S3MultipartUploadsParts)
+                .HasForeignKey(d => d.BucketId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("s3_multipart_uploads_parts_bucket_id_fkey");
 
             entity.HasOne(d => d.Upload).WithMany(p => p.S3MultipartUploadsParts)
                 .HasForeignKey(d => d.UploadId)
