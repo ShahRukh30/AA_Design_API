@@ -14,6 +14,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 using BusinessLogic.Interfaces.Services.StripService;
+using BusinessLogic.Interfaces.Services.Factories;
+using BusinessLogic.Interfaces.Services.UserService;
+using BusinessLogic.Interfaces.Repositories;
 
 namespace BusinessLogic.Services.PaymentService.StripeService
 {
@@ -21,15 +24,17 @@ namespace BusinessLogic.Services.PaymentService.StripeService
     {
         private readonly IConfiguration _config;
         private readonly string _webhookSecret;
+        private readonly IPaymentFactory _paymentfactory;
+        private readonly IUserService _user;
+        private readonly IGenericRepository<Models.SupabaseModels.Payment> _payment;
 
 
-
-
-
-        public StripeService(IConfiguration config)
+        public StripeService(IConfiguration config, IPaymentFactory paymentfactory,IUserService user, IGenericRepository<Models.SupabaseModels.Payment> payment)
         {
             _config = config;
-            _webhookSecret = "YOUR_STRIPE_WEBHOOK_SECRET";
+            _paymentfactory = paymentfactory;
+            _user = user;
+            _payment = payment;
 
         }
 
@@ -66,15 +71,14 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
                     },
                 Mode = "payment",
-                //BillingAddressCollection = "required",
                 SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
                 CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
 
                 Metadata = new Dictionary<string, string>
                 {
-                    { "orderid", orderid.ToString() } // Add orderid to metadata
+                    { "orderid", orderid.ToString() } 
                 },
-                CustomerEmail = email // Populate email field with passed parameter
+                CustomerEmail = email 
 
 
 
@@ -86,16 +90,6 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
             return session.Url;
         }
-
-        string IStripeService.CreateCheckoutSession(decimal amount, string email, long orderid)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
-
 
 
         public async Task PaymnentWebHook(HttpRequest request)
@@ -109,9 +103,15 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
             if (stripeEvent.Type == Events.CheckoutSessionCompleted)
             {
+                var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
+                var metadata = session.Metadata;
+                long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
+                string email = session.CustomerEmail;
+                long userid = await _user.Get(email);
                 if (stripeEvent.Type == Events.PaymentIntentSucceeded)
                 {
-
+                  Models.SupabaseModels.Payment finalresult= _paymentfactory.CreatePayment(orderId, userid);
+                   await _payment.Post(finalresult);
                 }
 
             }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.Interfaces.Repositories;
 using BusinessLogic.Interfaces.Services.AddressService;
+using BusinessLogic.Interfaces.Services.CheckoutService;
 using BusinessLogic.Interfaces.Services.Order;
 using BusinessLogic.Interfaces.Services.StripService;
 using BusinessLogic.Interfaces.Services.UserService;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Services.CheckoutService
 {
-    public class CheckoutService
+    public class CheckoutService:ICheckoutService
     {
 
         private readonly IUserService _user;
@@ -40,7 +41,7 @@ namespace BusinessLogic.Services.CheckoutService
             return addressfinal.Adressid;
         }
 
-        public async Task<string> Post(OrderDto dto,int orderid)
+        public async Task<string> Post(OrderDto dto,long orderid)
         {
             Models.SupabaseModels.Order order = _mapper.Map<Models.SupabaseModels.Order>(dto);
             order = await _gen.Post(order);

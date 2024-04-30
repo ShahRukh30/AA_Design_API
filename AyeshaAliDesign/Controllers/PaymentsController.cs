@@ -26,12 +26,7 @@ namespace API.Controllers
             return _stripe.CreateCheckoutSession(amount,email,orderid);
         }
 
-        [HttpPost("Payment-Event")]
-        public async Task<IActionResult> Webhook(HttpRequest request)
-        {
-            await _stripe.ProcessWebhookEvent(request);
-            return Ok();
-        }
+      
 
     }
 }
