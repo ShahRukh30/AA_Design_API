@@ -17,6 +17,7 @@ using BusinessLogic.Interfaces.Services.StripService;
 using BusinessLogic.Interfaces.Services.Factories;
 using BusinessLogic.Interfaces.Services.UserService;
 using BusinessLogic.Interfaces.Repositories;
+using Stripe.Forwarding;
 
 namespace BusinessLogic.Services.PaymentService.StripeService
 {
@@ -92,26 +93,23 @@ namespace BusinessLogic.Services.PaymentService.StripeService
         }
 
 
-        public async Task PaymnentWebHook(HttpRequest request)
-        {
+        public async Task PaymnentWebHook(string json,string head,string endpoint)
+        { 
 
-            var endpointSecret = "whsec_GKrTYjUysxcMhmnSqAgmXCnIDp9TfVri\r\n";
-            var json = await new StreamReader(request.Body).ReadToEndAsync();
-
-            var stripeEvent = EventUtility.ConstructEvent(json,
-                request.Headers["Stripe-Signature"], endpointSecret);
+            var stripeEvent = EventUtility.ConstructEvent(json, head, endpoint);
 
             if (stripeEvent.Type == Events.CheckoutSessionCompleted)
             {
-                var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
-                var metadata = session.Metadata;
-                long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
-                string email = session.CustomerEmail;
-                long userid = await _user.Get(email);
+
+                //var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
+                //var metadata = session.Metadata;
+                //long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
+                //string email = session.CustomerEmail;
+                //long userid = await _user.Get(email);
                 if (stripeEvent.Type == Events.PaymentIntentSucceeded)
                 {
-                  Models.SupabaseModels.Payment finalresult= _paymentfactory.CreatePayment(orderId, userid);
-                   await _payment.Post(finalresult);
+                  //Models.SupabaseModels.Payment finalresult= _paymentfactory.CreatePayment(orderId, userid);
+                  // await _payment.Post(finalresult);
                 }
 
             }

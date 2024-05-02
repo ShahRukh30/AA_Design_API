@@ -24,5 +24,4 @@ public partial class Deliveryadress
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     public virtual User1? User { get; set; }
 
-    
 }

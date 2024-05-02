@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.SupabaseModels.Dto.Order;
 using Models.SupabaseModels.Dto.User;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -24,7 +25,7 @@ namespace API.Controllers
         [HttpPost("checkout-session")]
         public async Task<string> Getsession(OrderDto dto)
         {
-            return await _checkout.Post(dto);
+            return JsonConvert.SerializeObject(await _checkout.Post(dto));
         }
 
         [HttpPost("checkout-prepare")]
