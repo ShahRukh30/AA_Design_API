@@ -27,7 +27,7 @@ namespace API.Controllers
             return _stripe.CreateCheckoutSession(amount,email,orderid);
         }
 
-        [HttpPost("Check")]
+        [HttpPost("")]
         public async Task<IActionResult> Check()
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
