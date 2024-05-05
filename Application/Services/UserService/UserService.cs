@@ -21,13 +21,12 @@ namespace BusinessLogic.Services.UserService
         private readonly IGenericRepository<User1> _gen;
         private readonly IUserFactory _userFactory;
         private readonly IUserRepository _userRepository;
-    
         private readonly IConfiguration _config;
 
-        public UserService(IMapper mapper,IGenericRepository<User1> gen,IUserFactory userFactory,  IConfiguration config)
+        public UserService(IMapper mapper,IGenericRepository<User1> gen,IUserFactory userFactory, IUserRepository userRepository, IConfiguration config)
         { 
             _gen = gen;
-            
+            _userRepository = userRepository;
             _config = config;
             _mapper = mapper;
             _userFactory = userFactory;
