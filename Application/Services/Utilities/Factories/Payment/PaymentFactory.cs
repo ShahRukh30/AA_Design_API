@@ -15,7 +15,7 @@ namespace BusinessLogic.Services.Utilities.Factories.Payment
         {
             Models.SupabaseModels.Payment val = new Models.SupabaseModels.Payment
             {
-                Paymenttimestamp = DateTime.Now,
+                Paymenttimestamp =DateTime.UtcNow,
                 Orderid = orderid,
                 Userid = userid,
                 Paymentstatus= "Payment Successful",
