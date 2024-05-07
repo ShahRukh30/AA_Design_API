@@ -81,7 +81,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductService.ProductService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
