@@ -39,15 +39,81 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
         }
 
-        public string CreateCheckoutSession(decimal amount, string email, long orderid)
+        private decimal GetTax(long amount, string line1, string city, string state, string postalcode)
+        {
+            StripeConfiguration.ApiKey = "sk_test_51P7jFlLesCixaoVsSFLbQZE2Z9khCKHOSsFYtd0S20bvYg962eHNk8sRRwKKisfXnl1iwTjq0sSrw1YfrAlG0Rd400ZEe0PzQy";
+            var options = new Stripe.Tax.CalculationCreateOptions
+            {
+                Currency = "usd",
+                LineItems = new List<Stripe.Tax.CalculationLineItemOptions>
+                 {
+                 new Stripe.Tax.CalculationLineItemOptions { Amount = amount, Reference = "L1" },
+                    },
+                CustomerDetails = new Stripe.Tax.CalculationCustomerDetailsOptions
+                {
+                    Address = new AddressOptions
+                    {
+                        Line1 = line1,
+                        City = city,
+                        State = state,
+                        PostalCode = postalcode,
+                        Country = "US",
+                    },
+                    AddressSource = "shipping",
+                },
+            };
+            var service = new Stripe.Tax.CalculationService();
+            service.Create(options);
+            Stripe.Tax.Calculation calculation;
+            calculation = service.Create(options);
+            decimal totalAmountWithTax = calculation.AmountTotal;
+            return totalAmountWithTax;
+        }
+            public string CreateCheckoutSession(decimal amount, string email, long orderid)
         {
 
-            StripeConfiguration.ApiKey = "sk_test_51OrJFLBCehTATMfqQyHN1bZQVkGVzxJyNi52rNX8Ipmhbb9T1WOhiU33LzdP5c0wmswM8qMMNUpUdHWE7xE9Xsv700NxoIWKT5";
+            StripeConfiguration.ApiKey = "sk_test_51P7jFlLesCixaoVsSFLbQZE2Z9khCKHOSsFYtd0S20bvYg962eHNk8sRRwKKisfXnl1iwTjq0sSrw1YfrAlG0Rd400ZEe0PzQy";
 
             var options = new SessionCreateOptions
             {
 
                 PaymentMethodTypes = new List<string> { "card" },
+                ShippingAddressCollection = new Stripe.Checkout.SessionShippingAddressCollectionOptions
+                {
+                    AllowedCountries = new List<string> { "US" },
+
+                },
+                ShippingOptions = new List<Stripe.Checkout.SessionShippingOptionOptions>
+                
+                { new Stripe.Checkout.SessionShippingOptionOptions
+                 {
+                  ShippingRateData = new Stripe.Checkout.SessionShippingOptionShippingRateDataOptions
+                     {
+                    Type = "fixed_amount",
+                   FixedAmount = new Stripe.Checkout.SessionShippingOptionShippingRateDataFixedAmountOptions
+                {
+                    Amount = 1607,
+                    Currency = "usd",
+                },
+                DisplayName = "Shipping",
+                DeliveryEstimate = new Stripe.Checkout.SessionShippingOptionShippingRateDataDeliveryEstimateOptions
+                {
+                    Minimum = new Stripe.Checkout.SessionShippingOptionShippingRateDataDeliveryEstimateMinimumOptions
+                    {
+                        Unit = "business_day",
+                        Value = 5,
+                    },
+                    Maximum = new Stripe.Checkout.SessionShippingOptionShippingRateDataDeliveryEstimateMaximumOptions
+                    {
+                        Unit = "business_day",
+                        Value = 7,
+                        },
+                            },
+                             },
+                         },
+                            },
+
+                    AutomaticTax = new Stripe.Checkout.SessionAutomaticTaxOptions { Enabled = true },
 
                 LineItems = new List<SessionLineItemOptions>()
                     {
@@ -57,21 +123,27 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                             PriceData = new SessionLineItemPriceDataOptions
                             {
 
-                                UnitAmount = (long)(amount * 100),
+                                UnitAmount = (long)(amount * 100) ,
                                 Currency = "usd",
-
+                                TaxBehavior = "exclusive",
 
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {
                                     Name = "Your Total",
                                 },
+
                             },
 
                             Quantity = 1,
+
                         },
 
                     },
                 Mode = "payment",
+
+             
+           
+
                 SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
                 CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
 
@@ -88,6 +160,8 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
             var service = new SessionService();
             var session = service.Create(options);
+
+
 
             return session.Url;
         }
