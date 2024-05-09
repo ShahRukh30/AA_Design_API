@@ -11,5 +11,6 @@ namespace Models.SupabaseModels.Dto.Order
         public long? Productid { get; set; }
 
         public long? Quantity { get; set; }
+        public long sizeid { get; set; }
     }
 }
