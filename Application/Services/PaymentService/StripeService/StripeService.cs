@@ -92,7 +92,7 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                     Type = "fixed_amount",
                    FixedAmount = new Stripe.Checkout.SessionShippingOptionShippingRateDataFixedAmountOptions
                 {
-                    Amount = 1607,
+                    Amount = 1500,
                     Currency = "usd",
                 },
                 DisplayName = "Shipping",
@@ -149,7 +149,8 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
                 Metadata = new Dictionary<string, string>
                 {
-                    { "orderid", orderid.ToString() } 
+                    { "orderid", orderid.ToString() } ,
+
                 },
                 CustomerEmail = email 
 
@@ -175,6 +176,7 @@ namespace BusinessLogic.Services.PaymentService.StripeService
             if (stripeEvent.Type == Events.CheckoutSessionCompleted)
             {
 
+               
                 var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
                 var metadata = session.Metadata;
                 long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
@@ -183,6 +185,18 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                 
                 Models.SupabaseModels.Payment finalresult = _paymentfactory.CreatePayment(orderId, userid);
                 await _payment.Post(finalresult);
+
+                if (stripeEvent.Type == Events.PaymentIntentSucceeded)
+                {
+                    var paymentIntent = (Stripe.PaymentIntent)stripeEvent.Data.Object;
+                    var shippingAddress = paymentIntent.Shipping.Address;
+                    string city = shippingAddress.City;
+                    string country = shippingAddress.Country;
+                    string line1 = shippingAddress.Line1;
+                    string line2 = shippingAddress.Line2;
+                    string postalCode = shippingAddress.PostalCode;
+                    string state = shippingAddress.State;
+                }
                 
 
             }
