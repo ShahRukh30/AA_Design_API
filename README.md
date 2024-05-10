@@ -1,7 +1,7 @@
 # Ecommerce Backend Application with ASP.NET Core Web API
 
 ## Description
-This project is an ecommerce backend application built with ASP.NET Core Web API. It provides a RESTful API for managing various aspects of an ecommerce platform, including products, orders, customers, and authentication.
+This project is an e-commerce backend application built with ASP.NET Core Web API. It provides a RESTful API for managing various aspects of the Ayesha Ali Design platform, including products, orders, customers, and authentication.
 
 ## Features
 - **Product Management**: CRUD operations for managing products.
@@ -23,7 +23,7 @@ This project is an ecommerce backend application built with ASP.NET Core Web API
   
 
 ## Configuration
-- **AppSettings**: Configuration settings such as database connection string, JWT secret key, etc., can be found in `appsettings.json`.
+- **AppSettings**: Configuration settings such as database connection string, secret keys, etc., can be found in `appsettings.json`.
 - **Database**: This application uses Entity Framework Core for database access. You can configure the database provider and connection string in `appsettings.json`.
 
 ## Usage
