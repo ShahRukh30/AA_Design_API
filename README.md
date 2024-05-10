@@ -13,14 +13,14 @@ This project is an ecommerce backend application built with ASP.NET Core Web API
 ## Installation
 1. Clone the repository: git clone https://github.com/your_username/your_repository.git
 2. Restore NuGet packages
-3. Set up the database:
+3. Set up the Postgres database:
 - Configure the connection string in `appsettings.json`.
 - Run database migrations:
   ```
   dotnet ef database update
   ```
 4. Run the application
-
+  
 
 ## Configuration
 - **AppSettings**: Configuration settings such as database connection string, JWT secret key, etc., can be found in `appsettings.json`.
