@@ -32,11 +32,17 @@ namespace BusinessLogic.Services.UserService
             _userFactory = userFactory;
         }
 
-        public Task<User1> Post(UserDto dto)
+        public async Task<User1> Post(UserDto dto)
         {
+            long id = await Get(dto.Email);
+            if (id>0)
+            {
+               
+                return await _gen.Get(id);
+            }
             User1 user = _mapper.Map<User1>(dto);
             user=_userFactory.CreateUser(user);
-            return _gen.Post(user);
+            return await _gen.Post(user);
         }
 
         public async Task<long> Get(string mail)

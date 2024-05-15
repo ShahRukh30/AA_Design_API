@@ -16,7 +16,7 @@ namespace Infrastructure.Repositories.Generic
         {
             _appContext = appcontext;
         }
-        public virtual async Task<T> Get(int id)
+        public virtual async Task<T> Get(long id)
         {
             T entity = await _appContext.Set<T>().FindAsync(id);
             return entity ;

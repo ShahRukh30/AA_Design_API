@@ -8,7 +8,7 @@ namespace BusinessLogic.Interfaces.Repositories
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<T> Get(int id);
+        Task<T> Get(long id);
         Task<IEnumerable<T>> Get();
         Task<T> Post(T entity);
         Task Put(T entity);

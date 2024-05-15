@@ -11,7 +11,7 @@ namespace BusinessLogic.Interfaces.Services.StripService
 {
     public interface IStripeService
     {
-        string CreateCheckoutSession(decimal amount, string email, long orderid);
+        string CreateCheckoutSession(decimal amount, string email, long orderid,long adressid);
        public Task PaymnentWebHook(string json, string head, string endpoint);
     }
 }

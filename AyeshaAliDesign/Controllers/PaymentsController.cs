@@ -21,11 +21,11 @@ namespace API.Controllers
 
         
 
-        [HttpGet("CheckoutSession")]
-        public string getsession(decimal amount,string email,long orderid)
-        {
-            return _stripe.CreateCheckoutSession(amount,email,orderid);
-        }
+        //[HttpGet("CheckoutSession")]
+        //public string getsession(decimal amount,string email,long orderid)
+        //{
+        //    return _stripe.CreateCheckoutSession(amount,email,orderid);
+        //}
 
         [HttpPost("")]
         public async Task<IActionResult> Check()

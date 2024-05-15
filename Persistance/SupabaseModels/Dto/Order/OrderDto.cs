@@ -8,7 +8,7 @@ namespace Models.SupabaseModels.Dto.Order
 {
     public class OrderDto
     {
-        public long? Addressid { get; set; }
+        public long Addressid { get; set; }
 
         public string? Dispatchid { get; set; }
 

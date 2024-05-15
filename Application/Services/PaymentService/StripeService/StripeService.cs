@@ -39,37 +39,8 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
         }
 
-        private decimal GetTax(long amount, string line1, string city, string state, string postalcode)
-        {
-            StripeConfiguration.ApiKey = "sk_test_51P7jFlLesCixaoVsSFLbQZE2Z9khCKHOSsFYtd0S20bvYg962eHNk8sRRwKKisfXnl1iwTjq0sSrw1YfrAlG0Rd400ZEe0PzQy";
-            var options = new Stripe.Tax.CalculationCreateOptions
-            {
-                Currency = "usd",
-                LineItems = new List<Stripe.Tax.CalculationLineItemOptions>
-                 {
-                 new Stripe.Tax.CalculationLineItemOptions { Amount = amount, Reference = "L1" },
-                    },
-                CustomerDetails = new Stripe.Tax.CalculationCustomerDetailsOptions
-                {
-                    Address = new AddressOptions
-                    {
-                        Line1 = line1,
-                        City = city,
-                        State = state,
-                        PostalCode = postalcode,
-                        Country = "US",
-                    },
-                    AddressSource = "shipping",
-                },
-            };
-            var service = new Stripe.Tax.CalculationService();
-            service.Create(options);
-            Stripe.Tax.Calculation calculation;
-            calculation = service.Create(options);
-            decimal totalAmountWithTax = calculation.AmountTotal;
-            return totalAmountWithTax;
-        }
-            public string CreateCheckoutSession(decimal amount, string email, long orderid)
+      
+            public string CreateCheckoutSession(decimal amount, string email, long orderid,long addressid)
         {
 
             StripeConfiguration.ApiKey = "sk_test_51P7jFlLesCixaoVsSFLbQZE2Z9khCKHOSsFYtd0S20bvYg962eHNk8sRRwKKisfXnl1iwTjq0sSrw1YfrAlG0Rd400ZEe0PzQy";

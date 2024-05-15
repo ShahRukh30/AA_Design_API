@@ -37,6 +37,7 @@ namespace BusinessLogic.Services.CheckoutService
 
         public async Task<long> Post(UserDto user)
         {
+            
            User1 users = await _user.Post(user);
             Deliveryadress addressfinal = await _address.Post(user, users.Userid);
             return addressfinal.Adressid;
@@ -49,7 +50,7 @@ namespace BusinessLogic.Services.CheckoutService
             order.Dispatchid = Guid.NewGuid().ToString();
             order.OrderProgress = "Pending";
             await _orderitem.Post(dto.OrderItemss, order.Orderid);
-            return _stripe.CreateCheckoutSession(dto.Totalprice,dto.Email,order.Orderid);
+            return _stripe.CreateCheckoutSession(dto.Totalprice,dto.Email,order.Orderid,dto.Addressid);
 
         }
     }
