@@ -1,4 +1,5 @@
-﻿using DataAccess.Context;
+﻿using BusinessLogic.Interfaces.Repositories;
+using DataAccess.Context;
 using Infrastructure.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using Models.SupabaseModels;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class ProductSizeRepository : GenericRepo<Productsize>
+    public class ProductSizeRepository : GenericRepo<Productsize>,IProductSizeRepository
     {
         private readonly PostgresContext _postgresContext;
         public ProductSizeRepository(PostgresContext appcontext) : base(appcontext)

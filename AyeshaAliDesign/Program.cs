@@ -81,6 +81,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductService.ProductService>();
@@ -93,6 +94,7 @@ builder.Services.AddScoped<IPaymentFactory, PaymentFactory>();
 builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 builder.Services.AddTransient<IStripeService, StripeService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IProductSizeService, ProductSizeService>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
