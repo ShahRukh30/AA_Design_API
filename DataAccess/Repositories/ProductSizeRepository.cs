@@ -31,9 +31,11 @@ namespace Infrastructure.Repositories
         public async Task<List<long?>> GetAvailableSizes(long productid)
         {
             List<long?> specificFields = await _postgresContext.Productsizes
-            .Where(p => p.Productid == productid && p.Sizequantity>0)
-            .Select(p => p.Sizeid) 
+            .Where(p => p.Productid == productid && p.Sizequantity > 0)
+            .Select(p => p.Sizeid)
+            .OrderBy(sizeId => sizeId)
             .ToListAsync();
+
 
             return specificFields;
         }
