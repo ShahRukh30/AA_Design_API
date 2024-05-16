@@ -21,6 +21,7 @@ using Stripe.Forwarding;
 using BusinessLogic.Interfaces.Services.AddressService;
 using Models.SupabaseModels;
 using Models.SupabaseModels.Dto.Order;
+using BusinessLogic.Interfaces.Services.Product;
 
 namespace BusinessLogic.Services.PaymentService.StripeService
 {
@@ -32,16 +33,20 @@ namespace BusinessLogic.Services.PaymentService.StripeService
         private readonly IUserService _user;
         private readonly IGenericRepository<Models.SupabaseModels.Payment> _payment;
         private readonly IAddressService _address;
+        private readonly IProductSizeService _productsize;
 
 
-        public StripeService(IConfiguration config, IPaymentFactory paymentfactory,IUserService user, 
-            IGenericRepository<Models.SupabaseModels.Payment> payment,IAddressService address)
+        public StripeService(IConfiguration config, 
+            IPaymentFactory paymentfactory,IUserService user, 
+            IGenericRepository<Models.SupabaseModels.Payment> payment,
+            IAddressService address, IProductSizeService productSize)
         {
             _config = config;
             _paymentfactory = paymentfactory;
             _user = user;
             _payment = payment;
             _address = address;
+            _productsize = productSize;
 
         }
 
@@ -50,7 +55,7 @@ namespace BusinessLogic.Services.PaymentService.StripeService
         {
 
             StripeConfiguration.ApiKey = "sk_test_51P7jFlLesCixaoVsSFLbQZE2Z9khCKHOSsFYtd0S20bvYg962eHNk8sRRwKKisfXnl1iwTjq0sSrw1YfrAlG0Rd400ZEe0PzQy";
-
+            string sizelist = JsonConvert.SerializeObject(sizearray);
             var options = new SessionCreateOptions
             {
 
@@ -121,12 +126,13 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
                 SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
                 CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
-
-                Metadata = new Dictionary<string, string>
+               
+           
+            Metadata = new Dictionary<string, string>
                 {
                     { "orderid", orderid.ToString() } ,
                     { "addressid",addressid.ToString() } ,
-                    {"productsizes", sizearray.ToString() } ,
+                    {"productsizes", sizelist } ,
 
                 },
                 CustomerEmail = email 
@@ -155,30 +161,31 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                 var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
                 var metadata = session.Metadata;
                 long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
-                long addressid= metadata.TryGetValue("addressid", out string addressIdValue) && long.TryParse(orderIdValue, out long tempAddressId) ? tempAddressId : -1L;
+                long addressid = metadata.TryGetValue("addressid", out string addressIdValue) && long.TryParse(addressIdValue, out long tempAddressId) ? tempAddressId : -1L;
                 string email = session.CustomerEmail;
                 long userid = await _user.Get(email);
                 List<OrderItemDto> orderItems = GetOrderItemsFromMetadata(metadata);
                 Models.SupabaseModels.Payment finalresult = _paymentfactory.CreatePayment(orderId, userid);
-                await _payment.Post(finalresult);
-
-                if (stripeEvent.Type == Events.PaymentIntentSucceeded)
+                if(stripeEvent.Type == Events.PaymentIntentSucceeded)
                 {
-                    var paymentIntent = (Stripe.PaymentIntent)stripeEvent.Data.Object;
-                    var shippingAddress = paymentIntent.Shipping.Address;
-                    string city = shippingAddress.City;
-                    string country = shippingAddress.Country;
-                    string line1 = shippingAddress.Line1;
-                    string line2 = shippingAddress.Line2;
-                    string postalCode = shippingAddress.PostalCode;
-                    string state = shippingAddress.State;
-                    long zip = long.Parse(postalCode);
-                    string address = $"{state}  {city}  {line1}  {line2}";
-                    Deliveryadress shipping= await _address.Get(addressid);
-                    shipping.Deliveryaddress = address;
-                    shipping.Zipcode = zip;
-                    await _address.Put(shipping);
+                    await _payment.Post(finalresult);
                 }
+                await _productsize.BulkUpdate(orderItems);
+                var paymentIntent = (Stripe.Checkout.Session)stripeEvent.Data.Object;
+                var shippingAddress = paymentIntent.ShippingDetails.Address;
+                string city = shippingAddress.City;
+                string country = shippingAddress.Country;
+                string line1 = shippingAddress.Line1;
+                string line2 = shippingAddress.Line2;
+                string postalCode = shippingAddress.PostalCode;
+                string state = shippingAddress.State;
+                long zip = long.Parse(postalCode);
+                string address = $"{state}  {city}  {line1}  {line2}";
+                Deliveryadress shipping= await _address.Get(addressid);
+                shipping.Deliveryaddress = address;
+                shipping.Zipcode = zip;
+                await _address.Put(shipping);
+                
 
 
             }
@@ -191,7 +198,7 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
             if (metadata.TryGetValue("productsizes", out string sizeArrayValue))
             {
-                // Assuming sizeArrayValue is JSON serialized array of OrderItemDto
+                
                 orderItems = JsonConvert.DeserializeObject<List<OrderItemDto>>(sizeArrayValue);
             }
 

@@ -52,7 +52,7 @@ namespace API.Controllers
         [HttpPost("payment-event")]
         public async Task<IActionResult> Webhook()
         {
-            var endpointSecret = "whsec_WGHoXI62SwUr6D8pUiJ1cfGBi2DtYEn8";
+            var endpointSecret = "whsec_598052d3d4877b0d3522efdc8f15a8a671faf24177abf385dc0b1044f9c814dd";
             var signature = HttpContext.Request.Headers["Stripe-Signature"];
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             await _stripe.PaymnentWebHook(json, signature, endpointSecret);
