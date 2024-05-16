@@ -11,7 +11,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowAll")]
+    [EnableCors("AllowAyesha")]
     public class CheckoutController : ControllerBase
     {
         private readonly ICheckoutService _checkout;

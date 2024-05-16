@@ -53,7 +53,16 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader(); 
     });
 });
-StripeConfiguration.ApiKey = "your_stripe_api_key_here";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAyesha", builder =>
+    {
+        builder.WithOrigins("https://www.ayeshaalidesign.com")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 IConfiguration config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -128,6 +137,7 @@ app.MapGet("/", () => "Server is running.Dev");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseCors("AllowAll");
+app.UseCors("AllowAyesha");
 
 
 app.MapControllers();
