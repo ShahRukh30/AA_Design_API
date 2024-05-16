@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
 
-
+        [EnableCors("AllowAyesha")]
         [HttpPost("checkout-session")]
         public async Task<string> Getsession(OrderDto dto)
         {

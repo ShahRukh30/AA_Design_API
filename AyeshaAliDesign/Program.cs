@@ -58,7 +58,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAyesha", builder =>
     {
-        builder.WithOrigins("https://www.ayeshaalidesign.com")
+        builder.WithOrigins("https://www.ayeshaalidesign.com/")
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
