@@ -35,6 +35,7 @@ using BusinessLogic.Services.CheckoutService;
 using BusinessLogic.Services.Order;
 using BusinessLogic.Services.Utilities.Factories.Address;
 using BusinessLogic.Services.Utilities.Factories.Payment;
+using BusinessLogic.Services.ProductSizeService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,7 +95,6 @@ builder.Services.AddScoped<IPaymentFactory, PaymentFactory>();
 builder.Services.AddScoped<IAddressFactory, AddressFactory>();
 builder.Services.AddTransient<IStripeService, StripeService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
-builder.Services.AddScoped<IProductSizeService, ProductSizeService>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();

@@ -50,7 +50,7 @@ namespace BusinessLogic.Services.CheckoutService
             order.Dispatchid = Guid.NewGuid().ToString();
             order.OrderProgress = "Pending";
             await _orderitem.Post(dto.OrderItemss, order.Orderid);
-            return _stripe.CreateCheckoutSession(dto.Totalprice,dto.Email,order.Orderid,dto.Addressid);
+            return _stripe.CreateCheckoutSession(dto.Totalprice,dto.Email,order.Orderid,dto.Addressid,dto.OrderItemss);
 
         }
     }

@@ -18,9 +18,10 @@ namespace API.Controllers
     {
         private  readonly IProductService _product;
         private readonly IProductSizeService _size;
-        public ProductController(IProductService product)
+        public ProductController(IProductService product, IProductSizeService size)
         {
             _product=product;
+            _size = size;
         }
 
         [HttpPost("Add")]
