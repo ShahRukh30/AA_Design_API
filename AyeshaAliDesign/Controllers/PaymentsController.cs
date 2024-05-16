@@ -27,29 +27,29 @@ namespace API.Controllers
         //    return _stripe.CreateCheckoutSession(amount,email,orderid);
         //}
 
-        [HttpPost("")]
-        public async Task<IActionResult> Check()
-        {
-            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-            var endpointSecret = "whsec_92a50f4783a166c8fa914b3eec19c89bfd06c02c39ae32fc5529a460b7c4adfc";
-            try
-            {
-                var stripeEvent = EventUtility.ConstructEvent(json,
-                    Request.Headers["Stripe-Signature"], endpointSecret);
+        //[HttpPost("")]
+        //public async Task<IActionResult> Check()
+        //{
+        //    var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+        //    var endpointSecret = "whsec_92a50f4783a166c8fa914b3eec19c89bfd06c02c39ae32fc5529a460b7c4adfc";
+        //    try
+        //    {
+        //        var stripeEvent = EventUtility.ConstructEvent(json,
+        //            Request.Headers["Stripe-Signature"], endpointSecret);
 
-                // Handle the event
-                Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+        //        // Handle the event
+        //        Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
 
-                return Ok();
-            }
-            catch (StripeException e)
-            {
-                return BadRequest();
-            }
-        }
+        //        return Ok();
+        //    }
+        //    catch (StripeException e)
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
 
-        [HttpPost("Payment-Event")]
+        [HttpPost("payment-event")]
         public async Task<IActionResult> Webhook()
         {
             var endpointSecret = "whsec_WGHoXI62SwUr6D8pUiJ1cfGBi2DtYEn8";
