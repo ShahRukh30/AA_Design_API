@@ -11,5 +11,6 @@ namespace BusinessLogic.Interfaces.Repositories
     public interface IProductSizeRepository : IGenericRepository<Productsize>
     {
         Task<Productsize> Update(OrderItemDto dto);
+        Task<List<long?>> GetAvailableSizes(long productid);
     }
 }

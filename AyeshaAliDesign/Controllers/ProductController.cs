@@ -17,6 +17,7 @@ namespace API.Controllers
     public class ProductController : ControllerBase
     {
         private  readonly IProductService _product;
+        private readonly IProductSizeService _size;
         public ProductController(IProductService product)
         {
             _product=product;
@@ -43,6 +44,13 @@ namespace API.Controllers
         public async Task<object> GetDetailsById(int id)
         {
             return await _product.GetDetailsbyID(id);
+        }
+
+        [HttpGet("size/{id}")]
+
+        public async Task<List<string>> GetSizes(long id)
+        {
+            return await _size.GetAvailableSizes(id);
         }
 
     }

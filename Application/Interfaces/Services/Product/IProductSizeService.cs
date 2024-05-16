@@ -12,5 +12,6 @@ namespace BusinessLogic.Interfaces.Services.Product
     public interface IProductSizeService:IGenericService<Productsize>
     {
         Task<List<Productsize>> BulkUpdate(List<OrderItemDto> itemlist);
+        Task<List<String>> GetAvailableSizes(long productid);
     }
 }

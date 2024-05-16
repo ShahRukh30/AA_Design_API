@@ -27,5 +27,15 @@ namespace Infrastructure.Repositories
             prod.Sizequantity = prod.Sizequantity - dto.Quantity;
             return await Put(prod);
         }
+
+        public async Task<List<long?>> GetAvailableSizes(long productid)
+        {
+            List<long?> specificFields = await _postgresContext.Productsizes
+            .Where(p => p.Productid == productid && p.Sizequantity>0)
+            .Select(p => p.Sizeid) 
+            .ToListAsync();
+
+            return specificFields;
+        }
     }
 }
