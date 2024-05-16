@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Interfaces.Services.StripService;
 using BusinessLogic.Services.PaymentService.StripeService;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.SupabaseModels.Dto.Payment;
@@ -10,6 +11,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAll")]
     public class PaymentsController : ControllerBase
     {
         private readonly IStripeService _stripe;

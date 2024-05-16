@@ -42,7 +42,10 @@ namespace DataAccess.Repositories
         {
             IQueryable<Models.SupabaseModels.User1> cs = _appcontext.Users1.Where(u => u.Email == mail);
 
-            Models.SupabaseModels.User1 found_user = await cs.FirstOrDefaultAsync(); 
+            Models.SupabaseModels.User1 found_user = await cs.FirstOrDefaultAsync();
+            if (found_user == null){
+                return 0;
+            }
             return found_user.Userid;
 
         }
