@@ -118,8 +118,6 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                     },
                 Mode = "payment",
 
-             
-           
 
                 SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
                 CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
