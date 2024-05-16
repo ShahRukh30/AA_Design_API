@@ -11,7 +11,7 @@ namespace BusinessLogic.Interfaces.Repositories
         Task<T> Get(long id);
         Task<IEnumerable<T>> Get();
         Task<T> Post(T entity);
-        Task Put(T entity);
+        Task<T> Put(T entity);
         Task Delete(T entity);
     }
 }

@@ -18,6 +18,9 @@ using BusinessLogic.Interfaces.Services.Factories;
 using BusinessLogic.Interfaces.Services.UserService;
 using BusinessLogic.Interfaces.Repositories;
 using Stripe.Forwarding;
+using BusinessLogic.Interfaces.Services.AddressService;
+using Models.SupabaseModels;
+using Models.SupabaseModels.Dto.Order;
 
 namespace BusinessLogic.Services.PaymentService.StripeService
 {
@@ -28,19 +31,22 @@ namespace BusinessLogic.Services.PaymentService.StripeService
         private readonly IPaymentFactory _paymentfactory;
         private readonly IUserService _user;
         private readonly IGenericRepository<Models.SupabaseModels.Payment> _payment;
+        private readonly IAddressService _address;
 
 
-        public StripeService(IConfiguration config, IPaymentFactory paymentfactory,IUserService user, IGenericRepository<Models.SupabaseModels.Payment> payment)
+        public StripeService(IConfiguration config, IPaymentFactory paymentfactory,IUserService user, 
+            IGenericRepository<Models.SupabaseModels.Payment> payment,IAddressService address)
         {
             _config = config;
             _paymentfactory = paymentfactory;
             _user = user;
             _payment = payment;
+            _address = address;
 
         }
 
       
-            public string CreateCheckoutSession(decimal amount, string email, long orderid,long addressid)
+            public string CreateCheckoutSession(decimal amount, string email, long orderid,long addressid, List<OrderItemDto> sizearray)
         {
 
             StripeConfiguration.ApiKey = "sk_test_51P7jFlLesCixaoVsSFLbQZE2Z9khCKHOSsFYtd0S20bvYg962eHNk8sRRwKKisfXnl1iwTjq0sSrw1YfrAlG0Rd400ZEe0PzQy";
@@ -121,6 +127,8 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                 Metadata = new Dictionary<string, string>
                 {
                     { "orderid", orderid.ToString() } ,
+                    { "addressid",addressid.ToString() } ,
+                    {"productsizes", sizearray.ToString() } ,
 
                 },
                 CustomerEmail = email 
@@ -146,14 +154,13 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
             if (stripeEvent.Type == Events.CheckoutSessionCompleted)
             {
-
-               
                 var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
                 var metadata = session.Metadata;
                 long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
+                long addressid= metadata.TryGetValue("addressid", out string addressIdValue) && long.TryParse(orderIdValue, out long tempAddressId) ? tempAddressId : -1L;
                 string email = session.CustomerEmail;
                 long userid = await _user.Get(email);
-                
+                List<OrderItemDto> orderItems = GetOrderItemsFromMetadata(metadata);
                 Models.SupabaseModels.Payment finalresult = _paymentfactory.CreatePayment(orderId, userid);
                 await _payment.Post(finalresult);
 
@@ -167,12 +174,30 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                     string line2 = shippingAddress.Line2;
                     string postalCode = shippingAddress.PostalCode;
                     string state = shippingAddress.State;
+                    long zip = long.Parse(postalCode);
+                    string address = $"{state}  {city}  {line1}  {line2}";
+                    Deliveryadress shipping= await _address.Get(addressid);
+                    shipping.Deliveryaddress = address;
+                    shipping.Zipcode = zip;
+                    await _address.Put(shipping);
                 }
-                
+
 
             }
 
 
+        }
+        private List<OrderItemDto> GetOrderItemsFromMetadata(Dictionary<string, string> metadata)
+        {
+            List<OrderItemDto> orderItems = new List<OrderItemDto>();
+
+            if (metadata.TryGetValue("productsizes", out string sizeArrayValue))
+            {
+                // Assuming sizeArrayValue is JSON serialized array of OrderItemDto
+                orderItems = JsonConvert.DeserializeObject<List<OrderItemDto>>(sizeArrayValue);
+            }
+
+            return orderItems;
         }
 
 

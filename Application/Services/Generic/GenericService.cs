@@ -16,7 +16,7 @@ namespace BusinessLogic.Services.Generic
             _gen = gen;
         }
 
-        public virtual Task<T> Get(int id)
+        public virtual Task<T> Get(long id)
         {
             return _gen.Get(id);
         }

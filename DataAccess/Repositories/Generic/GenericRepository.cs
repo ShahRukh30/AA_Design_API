@@ -37,11 +37,13 @@ namespace Infrastructure.Repositories.Generic
             return entity;
         }
 
-        public virtual async Task Put(T entity)
+        public virtual async Task<T> Put(T entity)
         {
             _appContext.Set<T>().Update(entity);
             await SaveChanges();
-           
+            _appContext.Entry(entity).Reload();
+            return entity;
+
         }
 
         public virtual async Task Delete(T entity)
