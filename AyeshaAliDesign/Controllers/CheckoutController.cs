@@ -11,7 +11,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowAyesha")]
+    [EnableCors("AllowAll")]
     public class CheckoutController : ControllerBase
     {
         private readonly ICheckoutService _checkout;
@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
 
-        [EnableCors("AllowAyesha")]
+      
         [HttpPost("checkout-session")]
         public async Task<string> Getsession(OrderDto dto)
         {
