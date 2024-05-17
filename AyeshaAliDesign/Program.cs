@@ -36,83 +36,14 @@ using BusinessLogic.Services.Order;
 using BusinessLogic.Services.Utilities.Factories.Address;
 using BusinessLogic.Services.Utilities.Factories.Payment;
 using BusinessLogic.Services.ProductSizeService;
+using API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddApplication(builder.Configuration)
+    .AddAPI(builder.Configuration);
 
-
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-); ;
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin() 
-               .AllowAnyMethod() 
-               .AllowAnyHeader(); 
-    });
-});
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAyesha", builder =>
-    {
-        builder.WithOrigins("https://www.ayeshaalidesign.com/")
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
-
-IConfiguration config = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
-var Config = config.GetSection("Jwt");
-var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config["Key"]!));
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = Config["Issuer"],
-        ValidAudience = Config["Audience"],
-        IssuerSigningKey = key
-    };
-});
-
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepo<>));
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
-builder.Services.AddScoped<IUserRepository,UserRepository>();
-builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductService.ProductService>();
-builder.Services.AddScoped<IOrderItemService, OrderItemService>();
-builder.Services.AddScoped<ICheckoutService, CheckoutService>();
-builder.Services.AddScoped<IProductSizeService, ProductSizeService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserFactory, UserFactory>();
-builder.Services.AddScoped<IPaymentFactory, PaymentFactory>();
-builder.Services.AddScoped<IAddressFactory, AddressFactory>();
-builder.Services.AddTransient<IStripeService, StripeService>();
-builder.Services.AddScoped<IAddressService, AddressService>();
-builder.Services.AddScoped<IProductImageService, ProductImageService>();
-builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
-builder.Services.AddScoped<IFileStorageService, FileStorageService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddDbContext<PostgresContext>();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var portExists = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var port);
 if (portExists)
