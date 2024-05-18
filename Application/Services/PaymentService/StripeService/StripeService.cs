@@ -124,8 +124,8 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                 Mode = "payment",
 
 
-                SuccessUrl = "https://ayeshaalidesign.vercel.app/payment-success",
-                CancelUrl = "https://ayeshaalidesign.vercel.app/payment-fail",
+                SuccessUrl = "https://www.ayeshaalidesign.com/payment-success",
+                CancelUrl = "https://www.ayeshaalidesign.com/payment-fail",
                
            
             Metadata = new Dictionary<string, string>
