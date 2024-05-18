@@ -15,10 +15,12 @@ namespace API.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly IStripeService _stripe;
+        private readonly IConfiguration _config;
 
-        public PaymentsController(IStripeService stripe)
+        public PaymentsController(IStripeService stripe,IConfiguration config)
         {
             _stripe=stripe;
+            _config=config;
         }
 
         
@@ -54,7 +56,7 @@ namespace API.Controllers
         [HttpPost("payment-event")]
         public async Task<IActionResult> Webhook()
         {
-            var endpointSecret = "whsec_WGHoXI62SwUr6D8pUiJ1cfGBi2DtYEn8";
+            var endpointSecret = _config["Stripe:Webhook"];
             var signature = HttpContext.Request.Headers["Stripe-Signature"];
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             await _stripe.PaymnentWebHook(json, signature, endpointSecret);

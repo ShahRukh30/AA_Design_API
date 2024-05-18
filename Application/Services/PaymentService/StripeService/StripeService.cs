@@ -54,7 +54,7 @@ namespace BusinessLogic.Services.PaymentService.StripeService
             public string CreateCheckoutSession(decimal amount, string email, long orderid,long addressid, List<OrderItemDto> sizearray)
         {
 
-            StripeConfiguration.ApiKey = "sk_test_51P7jFlLesCixaoVsSFLbQZE2Z9khCKHOSsFYtd0S20bvYg962eHNk8sRRwKKisfXnl1iwTjq0sSrw1YfrAlG0Rd400ZEe0PzQy";
+            StripeConfiguration.ApiKey =_config["Stripe:SecretKey"];
             string sizelist = JsonConvert.SerializeObject(sizearray);
             var options = new SessionCreateOptions
             {
@@ -156,39 +156,37 @@ namespace BusinessLogic.Services.PaymentService.StripeService
 
             var stripeEvent = EventUtility.ConstructEvent(json, head, endpoint,300,false);
 
-            if (stripeEvent.Type == Events.CheckoutSessionCompleted)
-            {
-                var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
-                var metadata = session.Metadata;
-                long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
-                long addressid = metadata.TryGetValue("addressid", out string addressIdValue) && long.TryParse(addressIdValue, out long tempAddressId) ? tempAddressId : -1L;
-                string email = session.CustomerEmail;
-                long userid = await _user.Get(email);
-                List<OrderItemDto> orderItems = GetOrderItemsFromMetadata(metadata);
-                Models.SupabaseModels.Payment finalresult = _paymentfactory.CreatePayment(orderId, userid);
-                if(stripeEvent.Type == Events.PaymentIntentSucceeded)
+           
+                if (stripeEvent.Type == Events.CheckoutSessionCompleted)
                 {
+                    var session = (Stripe.Checkout.Session)stripeEvent.Data.Object;
+                    var metadata = session.Metadata;
+                    long orderId = metadata.TryGetValue("orderid", out string orderIdValue) && long.TryParse(orderIdValue, out long tempOrderId) ? tempOrderId : -1L;
+                    long addressid = metadata.TryGetValue("addressid", out string addressIdValue) && long.TryParse(addressIdValue, out long tempAddressId) ? tempAddressId : -1L;
+                    string email = session.CustomerEmail;
+                    long userid = await _user.Get(email);
+                    List<OrderItemDto> orderItems = GetOrderItemsFromMetadata(metadata);
+                    Models.SupabaseModels.Payment finalresult = _paymentfactory.CreatePayment(orderId, userid);
                     await _payment.Post(finalresult);
+                    await _productsize.BulkUpdate(orderItems);
+                    var paymentIntent = (Stripe.Checkout.Session)stripeEvent.Data.Object;
+                    var shippingAddress = paymentIntent.ShippingDetails.Address;
+                    string city = shippingAddress.City;
+                    string country = shippingAddress.Country;
+                    string line1 = shippingAddress.Line1;
+                    string line2 = shippingAddress.Line2;
+                    string postalCode = shippingAddress.PostalCode;
+                    string state = shippingAddress.State;
+                    long zip = long.Parse(postalCode);
+                    string address = $"{state}  {city}  {line1}  {line2}";
+                    Deliveryadress shipping = await _address.Get(addressid);
+                    shipping.Deliveryaddress = address;
+                    shipping.Zipcode = zip;
+                    await _address.Put(shipping);
                 }
-                await _productsize.BulkUpdate(orderItems);
-                var paymentIntent = (Stripe.Checkout.Session)stripeEvent.Data.Object;
-                var shippingAddress = paymentIntent.ShippingDetails.Address;
-                string city = shippingAddress.City;
-                string country = shippingAddress.Country;
-                string line1 = shippingAddress.Line1;
-                string line2 = shippingAddress.Line2;
-                string postalCode = shippingAddress.PostalCode;
-                string state = shippingAddress.State;
-                long zip = long.Parse(postalCode);
-                string address = $"{state}  {city}  {line1}  {line2}";
-                Deliveryadress shipping= await _address.Get(addressid);
-                shipping.Deliveryaddress = address;
-                shipping.Zipcode = zip;
-                await _address.Put(shipping);
-                
 
 
-            }
+            
 
 
         }
