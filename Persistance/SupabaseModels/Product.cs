@@ -17,6 +17,8 @@ public partial class Product
 
     public long? Productcategoryid { get; set; }
 
+    public string details { get; set; }
+
     public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
 
     public virtual Productcategory? Productcategory { get; set; }

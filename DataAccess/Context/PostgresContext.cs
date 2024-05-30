@@ -642,6 +642,7 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Price).HasColumnName("price");
             entity.Property(e => e.Productcategoryid).HasColumnName("productcategoryid");
             entity.Property(e => e.Productdescription).HasColumnName("productdescription");
+            entity.Property(e => e.details).HasColumnName("details");
             entity.Property(e => e.Productname).HasColumnName("productname");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
 

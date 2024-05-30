@@ -63,6 +63,7 @@ namespace Infrastructure.Repositories
                             ProductId = product.Productid,
                             ProductName=product.Productname,
                             ProductPrice=product.Price,
+                            ProductDetail=product.details,
                             CategoryName = category.Productcategory1,
                             ImageUrl = image.Imageurl
                         };
