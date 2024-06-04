@@ -36,6 +36,8 @@ using BusinessLogic.Services.Order;
 using BusinessLogic.Services.Utilities.Factories.Address;
 using BusinessLogic.Services.Utilities.Factories.Payment;
 using BusinessLogic.Services.ProductSizeService;
+using BusinessLogic.Interfaces.Services.AuthService;
+using BusinessLogic.Services.AuthService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,6 +96,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductService.ProductService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();

@@ -35,8 +35,6 @@ namespace Infrastructure.Repositories
             .Select(p => p.Sizeid)
             .OrderBy(sizeId => sizeId)
             .ToListAsync();
-
-
             return specificFields;
         }
     }
