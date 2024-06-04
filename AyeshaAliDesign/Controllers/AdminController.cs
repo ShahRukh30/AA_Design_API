@@ -1,7 +1,10 @@
 ﻿using BusinessLogic.Interfaces.Services.AuthService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.SupabaseModels.Dto;
 using Models.SupabaseModels.Dto.Admin;
+using Newtonsoft.Json;
+
 
 namespace API.Controllers
 {
@@ -19,9 +22,13 @@ namespace API.Controllers
 
         [HttpPost("Login")]
 
-        public async Task<string> Login(AdminLoginDto dto)
+        public async Task<object> Login(AdminLoginDto dto)
         {
-            return await _authService.Login(dto);
+           
+            RefreshToken val = new RefreshToken();
+            val.Token = await _authService.Login(dto);
+            val.ExpiresIn = "3600";
+            return val;
         }
 
         [HttpPost("Logout")]
@@ -33,13 +40,7 @@ namespace API.Controllers
 
 
 
-        [HttpGet("refresh-token")]
-
-        public async Task<string> refreshtoken()
-        {
-           return await _authService.RefreshToken();
-        }
-
+        
     }
 }
 
