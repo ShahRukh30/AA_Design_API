@@ -19,5 +19,10 @@ namespace BusinessLogic.Services.Order
         {
             return await _orderRepository.GetOrderList();
         }
+
+        public async Task<object> GetOrderByDate(int days)
+        {
+            return await _orderRepository.GetOrderByDate(days);
+        }
     }
 }

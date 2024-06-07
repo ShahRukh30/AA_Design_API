@@ -9,5 +9,6 @@ namespace BusinessLogic.Interfaces.Services.Order
     public interface IOrderService
     {
         Task<object> GetOrderList();
+        Task<object> GetOrderByDate(int days);
     }
 }

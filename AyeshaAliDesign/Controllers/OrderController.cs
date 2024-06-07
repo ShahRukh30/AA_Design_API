@@ -20,5 +20,12 @@ namespace API.Controllers
             return await _orderservice.GetOrderList();  
         }
 
+        [HttpGet("date/{days}")]
+        public async Task<object> GetOrderByDate(int days)
+        {
+            return await _orderservice.GetOrderByDate(days);
+        }
+
+
     }
 }
