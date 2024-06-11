@@ -67,15 +67,31 @@ namespace DataAccess.Repositories
                 if (!string.Equals(status, "All", StringComparison.OrdinalIgnoreCase))
                 {
                     query = query.Where(order => order.DeliveryStatus == status);
+                    return await query.ToListAsync<object>();
+                }
+                else
+                {
+                    return await query.ToListAsync<object>();
                 }
             }
-
+            else
+            {
+                if (!string.Equals(status, "All", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(order => order.DeliveryStatus == status);
+                    return await query.ToListAsync<object>();
+                }
+                else
+                {
+                    return await query.ToListAsync<object>();
+                }
+            }
            
 
-            var result = await query.ToListAsync<object>();
+            //var result = await query.ToListAsync<object>();
 
 
-            return result;
+            //return result;
         }
 
 

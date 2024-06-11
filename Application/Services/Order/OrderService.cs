@@ -22,10 +22,6 @@ namespace BusinessLogic.Services.Order
 
         public async Task<object> GetOrderByDate(int days,string status)
         {
-            if (days == -1)
-            {
-                return await _orderRepository.GetOrderList();
-            }
             return await _orderRepository.GetOrderByDate(days,status);
         }
 
