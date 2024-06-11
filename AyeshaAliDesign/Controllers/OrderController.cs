@@ -21,9 +21,15 @@ namespace API.Controllers
         }
 
         [HttpGet("date/{days}")]
-        public async Task<object> GetOrderByDate(int days=0)
+        public async Task<object> GetOrderByDate(int days,string status)
         {
-            return await _orderservice.GetOrderByDate(days);
+            return await _orderservice.GetOrderByDate(days, status);
+        }
+
+        [HttpPut("status")]
+        public async Task<object> PutStatus(long orderid, string status)
+        {
+            return await _orderservice.PutStatus(orderid, status);
         }
 
 

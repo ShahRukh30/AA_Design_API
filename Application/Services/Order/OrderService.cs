@@ -20,13 +20,20 @@ namespace BusinessLogic.Services.Order
             return await _orderRepository.GetOrderList();
         }
 
-        public async Task<object> GetOrderByDate(int days)
+        public async Task<object> GetOrderByDate(int days,string status)
         {
             if (days == -1)
             {
                 return await _orderRepository.GetOrderList();
             }
-            return await _orderRepository.GetOrderByDate(days);
+            return await _orderRepository.GetOrderByDate(days,status);
+        }
+
+        public async Task<bool> PutStatus(long orderId, string status)
+        {
+            
+            return await _orderRepository.PutStatus(orderId, status);
+
         }
     }
 }

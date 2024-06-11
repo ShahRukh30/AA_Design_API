@@ -10,6 +10,8 @@ namespace BusinessLogic.Interfaces.Repositories
     public interface IOrderRepository: IGenericRepository<Order>
     {
         Task<object> GetOrderList();
-        Task<object> GetOrderByDate(int days);
+        Task<object> GetOrderByDate(int days,string status);
+        Task<bool> PutStatus(long orderId, string status);
+        
     }
 }
