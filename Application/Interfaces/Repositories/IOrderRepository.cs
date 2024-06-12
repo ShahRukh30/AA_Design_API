@@ -12,6 +12,8 @@ namespace BusinessLogic.Interfaces.Repositories
         Task<object> GetOrderList();
         Task<object> GetOrderByDate(int days,string status);
         Task<bool> PutStatus(long orderId, string status);
-        
+        Task<object> GetOrderDetails(long orderid);
+
+
     }
 }

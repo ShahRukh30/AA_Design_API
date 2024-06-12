@@ -33,5 +33,10 @@ namespace API.Controllers
         }
 
 
+        [HttpGet("{id}")]
+        public async Task<object> GetOrderDetails(long id)
+        {
+            return await _orderservice.GetOrderDetails(id);
+        }
     }
 }

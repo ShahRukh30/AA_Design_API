@@ -574,6 +574,7 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Productid).HasColumnName("productid");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.ProductSizes).HasColumnName("productsizes");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Orderitems)
                 .HasForeignKey(d => d.Orderid)

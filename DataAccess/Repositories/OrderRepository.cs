@@ -117,5 +117,45 @@ namespace DataAccess.Repositories
             return result;
         }
 
+
+        public async Task<object> GetOrderDetails(long orderid)
+        {
+            
+            var result = await (from orderitem in _appcontext.Orderitems
+                                where orderitem.Orderid == orderid
+                                join product in _appcontext.Products
+                                on orderitem.Productid equals product.Productid
+                                join order in _appcontext.Orders
+                                on orderitem.Orderid equals order.Orderid
+                                group new { orderitem, product } by order.Orderid into g
+                                select new
+                                {
+                                    OrderId = orderid,
+                                    TotalPrice = g.First().orderitem.Order.Totalprice,
+                                    DispatchId = g.First().orderitem.Order.Dispatchid,
+                                    OrderProgress = g.First().orderitem.Order.OrderProgress,
+                                    Products = g.Select(x => new
+                                    {
+                                        ProductName = x.product.Productname,
+                                        ProductSizes = x.orderitem.ProductSizes,
+                                        ProductPrice=x.product.Price,
+                                        Quantity = x.orderitem.Quantity,
+                                        XSCount = x.orderitem.ProductSizes.Count(size => size == "XS"),
+                                        SCount = x.orderitem.ProductSizes.Count(size => size == "S"),
+                                        MCount = x.orderitem.ProductSizes.Count(size => size == "M"),
+                                        LCount = x.orderitem.ProductSizes.Count(size => size == "L"),
+                                        XLCount = x.orderitem.ProductSizes.Count(size => size == "XL")
+                                    }).ToList()
+
+                                .ToList(),
+                                   
+                                    TotalQuantity = g.Sum(x => x.orderitem.Quantity) // Calculate total quantity
+                                }).ToListAsync();
+
+
+
+
+            return result;
+        }
     }
 }

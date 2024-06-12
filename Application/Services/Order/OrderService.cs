@@ -31,5 +31,10 @@ namespace BusinessLogic.Services.Order
             return await _orderRepository.PutStatus(orderId, status);
 
         }
+
+        public async Task<object> GetOrderDetails(long orderid)
+        {
+            return await _orderRepository.GetOrderDetails(orderid);
+        }
     }
 }
