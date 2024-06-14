@@ -36,9 +36,7 @@ namespace API.Controllers
 
         public async Task<Promocode> Put(Promocode val)
         {
-         
            return await _genericService.Put(val);
-           
         }
 
 
