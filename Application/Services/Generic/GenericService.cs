@@ -31,7 +31,7 @@ namespace BusinessLogic.Services.Generic
             return _gen.Post(Entity);
         }
 
-        public virtual Task Put(T Entity)
+        public virtual Task<T> Put(T Entity)
         {
             return _gen.Put(Entity);
         }

@@ -29,5 +29,18 @@ namespace API.Controllers
            return await _genericService.post(a);
 
         }
+
+
+
+        [HttpPost]
+
+        public async Task<Promocode> Put(Promocode val)
+        {
+         
+           return await _genericService.Put(val);
+           
+        }
+
+
     }
 }

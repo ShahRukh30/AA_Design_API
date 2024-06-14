@@ -12,7 +12,7 @@ namespace BusinessLogic.Interfaces.Services.GenericService
         Task<T> Get(long id);
         Task<IEnumerable<T>> Get();
         Task<T> post(T Entity);
-        Task Put(T Entity);
+        Task<T> Put(T Entity);
         Task Delete(T Entity);
     }
 }
