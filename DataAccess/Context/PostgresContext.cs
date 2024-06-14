@@ -547,7 +547,7 @@ public partial class PostgresContext : DbContext
         {
             entity.HasKey(e => e.PromocodeId).HasName("promocode_pkey");
 
-            entity.ToTable("orders");
+            entity.ToTable("promocodes");
 
             entity.Property(e => e.PromocodeId)
                 .UseIdentityAlwaysColumn()

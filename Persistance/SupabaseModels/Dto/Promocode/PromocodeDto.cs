@@ -13,8 +13,8 @@ namespace Models.SupabaseModels.Dto.Promocode
         public required string Code { get; set; }
         public decimal DiscountAmount { get; set; }
         public int CodeLimit { get; set; }
-        public DateTime Start_Date { get; set; }
-        public DateTime Expiration_Date { get; set; }
+        public DateOnly Start_Date { get; set; }
+        public DateOnly Expiration_Date { get; set; }
         public int UserLimit { get; set; }
         public int Total_Usage { get; set; }
         public bool IsActive { get; set; }
