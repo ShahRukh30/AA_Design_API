@@ -16,6 +16,8 @@ public partial class Order
     public string? OrderProgress { get; set; }
 
     public DateTime OrderDate { get; set; }
+
+    public DateTime? DeliveryDate {  get; set; }
     public virtual Deliveryadress? Address { get; set; }
 
     public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();

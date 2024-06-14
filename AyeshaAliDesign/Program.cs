@@ -38,6 +38,7 @@ using BusinessLogic.Services.Utilities.Factories.Payment;
 using BusinessLogic.Services.ProductSizeService;
 using BusinessLogic.Interfaces.Services.AuthService;
 using BusinessLogic.Services.AuthService;
+using BusinessLogic.Services.Utilities.ProductSizeConverter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,6 +103,7 @@ builder.Services.AddScoped<IProductService, BusinessLogic.Services.ProductServic
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IProductSizeService, ProductSizeService>();
+builder.Services.AddScoped<ISizeConverter, SizeConverter>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();
 builder.Services.AddScoped<IPaymentFactory, PaymentFactory>();

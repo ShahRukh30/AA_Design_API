@@ -9,7 +9,7 @@ public partial class Orderitem
 
     public long? Productid { get; set; }
 
-    public List<string>? ProductSizes { get; set; }
+    public string? ProductSizes { get; set; }
     public long? Orderid { get; set; }
 
     public long? Quantity { get; set; }

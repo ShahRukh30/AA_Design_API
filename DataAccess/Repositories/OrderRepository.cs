@@ -22,6 +22,33 @@ namespace DataAccess.Repositories
             _appcontext = appcontext;
         }
 
+        public async Task<decimal?> PatchPrice(long orderId, decimal amount)
+        {
+            var order = await _appcontext.Orders.FindAsync(orderId);
+            order.Totalprice = amount;
+
+            // Save the changes to the database
+            await _appcontext.SaveChangesAsync();
+
+            return order.Totalprice;
+
+        }
+
+        public async Task<bool> PatchDeliveryDate(long orderId)
+        {
+            var order = await _appcontext.Orders.FindAsync(orderId);
+            if (order == null)
+            {
+                return false;
+            }
+            order.DeliveryDate = DateTime.UtcNow;
+
+            // Save the changes to the database
+            await _appcontext.SaveChangesAsync();
+
+            return true;
+
+        }
         public async Task<bool> PutStatus(long orderId, string status)
         {
             var order = await _appcontext.Orders.FindAsync(orderId);
@@ -140,11 +167,6 @@ namespace DataAccess.Repositories
                                         ProductSizes = x.orderitem.ProductSizes,
                                         ProductPrice=x.product.Price,
                                         Quantity = x.orderitem.Quantity,
-                                        XSCount = x.orderitem.ProductSizes.Count(size => size == "XS"),
-                                        SCount = x.orderitem.ProductSizes.Count(size => size == "S"),
-                                        MCount = x.orderitem.ProductSizes.Count(size => size == "M"),
-                                        LCount = x.orderitem.ProductSizes.Count(size => size == "L"),
-                                        XLCount = x.orderitem.ProductSizes.Count(size => size == "XL")
                                     }).ToList()
 
                                 .ToList(),

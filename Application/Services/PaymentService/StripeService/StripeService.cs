@@ -22,6 +22,7 @@ using BusinessLogic.Interfaces.Services.AddressService;
 using Models.SupabaseModels;
 using Models.SupabaseModels.Dto.Order;
 using BusinessLogic.Interfaces.Services.Product;
+using BusinessLogic.Interfaces.Services.Order;
 
 namespace BusinessLogic.Services.PaymentService.StripeService
 {
@@ -34,18 +35,20 @@ namespace BusinessLogic.Services.PaymentService.StripeService
         private readonly IGenericRepository<Models.SupabaseModels.Payment> _payment;
         private readonly IAddressService _address;
         private readonly IProductSizeService _productsize;
+        private readonly IOrderService _orderservice;
 
 
         public StripeService(IConfiguration config, 
             IPaymentFactory paymentfactory,IUserService user, 
             IGenericRepository<Models.SupabaseModels.Payment> payment,
-            IAddressService address, IProductSizeService productSize)
+            IAddressService address, IProductSizeService productSize,IOrderService orderservice)
         {
             _config = config;
             _paymentfactory = paymentfactory;
             _user = user;
             _payment = payment;
             _address = address;
+            _orderservice = orderservice;
             _productsize = productSize;
 
         }
@@ -165,11 +168,13 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                     long addressid = metadata.TryGetValue("addressid", out string addressIdValue) && long.TryParse(addressIdValue, out long tempAddressId) ? tempAddressId : -1L;
                     string email = session.CustomerEmail;
                     long userid = await _user.Get(email);
+                    long? amount = session.AmountTotal;
                     List<OrderItemDto> orderItems = GetOrderItemsFromMetadata(metadata);
                     Models.SupabaseModels.Payment finalresult = _paymentfactory.CreatePayment(orderId, userid);
                     await _payment.Post(finalresult);
                     await _productsize.BulkUpdate(orderItems);
                     var paymentIntent = (Stripe.Checkout.Session)stripeEvent.Data.Object;
+
                     var shippingAddress = paymentIntent.ShippingDetails.Address;
                     string city = shippingAddress.City;
                     string country = shippingAddress.Country;
@@ -182,7 +187,11 @@ namespace BusinessLogic.Services.PaymentService.StripeService
                     Deliveryadress shipping = await _address.Get(addressid);
                     shipping.Deliveryaddress = address;
                     shipping.Zipcode = zip;
+                    await _orderservice.PutStatus(orderId, "PaymentSuccess");
+                    await _orderservice.PatchPrice(orderId,amount);
                     await _address.Put(shipping);
+
+
                 }
 
 

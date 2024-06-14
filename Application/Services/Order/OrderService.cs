@@ -25,10 +25,27 @@ namespace BusinessLogic.Services.Order
             return await _orderRepository.GetOrderByDate(days,status);
         }
 
+        private async Task<bool> PatchDeliveryDate(long orderid)
+        {
+            return await _orderRepository.PatchDeliveryDate(orderid);
+        }
+
         public async Task<bool> PutStatus(long orderId, string status)
         {
+            if (status == "Delivered")
+            {
+                bool val= await _orderRepository.PutStatus(orderId, status);
+                await PatchDeliveryDate(orderId);
+                return val;
+            }
             
             return await _orderRepository.PutStatus(orderId, status);
+        }
+
+        public async Task<decimal?> PatchPrice (long orderid, long? price)
+        {
+            decimal amount = (decimal)price / 100;
+            return await _orderRepository.PatchPrice(orderid, amount);
 
         }
 

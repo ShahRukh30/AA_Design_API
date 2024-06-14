@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "Applicatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{E83B9C20-0E00-43C4-9485-6E52AD71A8E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard.AppHost", "Dashboard\Dashboard.AppHost\Dashboard.AppHost.csproj", "{D8E00B09-D0B2-42F7-98BF-AAA6E3025B3C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.ServiceDefaults", "Dashboard\Dashboard.ServiceDefaults\Dashboard.ServiceDefaults.csproj", "{7E4076C1-0C27-44E1-B7F6-87A3920C7C07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{E83B9C20-0E00-43C4-9485-6E52AD71A8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E83B9C20-0E00-43C4-9485-6E52AD71A8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E83B9C20-0E00-43C4-9485-6E52AD71A8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E00B09-D0B2-42F7-98BF-AAA6E3025B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E00B09-D0B2-42F7-98BF-AAA6E3025B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E00B09-D0B2-42F7-98BF-AAA6E3025B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E00B09-D0B2-42F7-98BF-AAA6E3025B3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4076C1-0C27-44E1-B7F6-87A3920C7C07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4076C1-0C27-44E1-B7F6-87A3920C7C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4076C1-0C27-44E1-B7F6-87A3920C7C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4076C1-0C27-44E1-B7F6-87A3920C7C07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

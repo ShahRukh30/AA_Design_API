@@ -9,7 +9,6 @@ namespace Models.SupabaseModels.Dto.Order
     public class OrderItemDto
     {
         public long? Productid { get; set; }
-
         public long? Quantity { get; set; }
         public long sizeid { get; set; }
     }

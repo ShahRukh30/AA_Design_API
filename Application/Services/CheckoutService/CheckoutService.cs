@@ -47,8 +47,9 @@ namespace BusinessLogic.Services.CheckoutService
         public async Task<string> Post(OrderDto dto)
         {
             Models.SupabaseModels.Order order = _mapper.Map<Models.SupabaseModels.Order>(dto);
+            order.OrderDate = DateTime.UtcNow.Date;
             order = await _gen.Post(order);
-            order.Dispatchid = Guid.NewGuid().ToString();
+            order.Dispatchid = Guid.NewGuid().ToString("N").Substring(0, 20);
             order.OrderProgress = "Pending";
             await _orderitem.Post(dto.OrderItemss, order.Orderid);
             return _stripe.CreateCheckoutSession(dto.Totalprice,dto.Email,order.Orderid,dto.Addressid,dto.OrderItemss);

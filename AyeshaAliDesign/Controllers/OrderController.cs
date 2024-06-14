@@ -20,6 +20,14 @@ namespace API.Controllers
             return await _orderservice.GetOrderList();  
         }
 
+        [HttpPatch("price")]
+        public async Task<decimal?> PatchPrice(long id,long amount)
+        {
+            return await _orderservice.PatchPrice(id,amount);
+        }
+
+
+
         [HttpGet("date/{days}")]
         public async Task<object> GetOrderByDate(int days,string status)
         {
