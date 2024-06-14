@@ -17,7 +17,7 @@ namespace API.Controllers
         public PromocodeController(IMapper mapper, IGenericService<Promocode> genericService)
         {
             _mapper = mapper;
-            _genericService=genericService;
+            _genericService = genericService;
         }
 
 
@@ -25,14 +25,31 @@ namespace API.Controllers
 
         public async Task<Promocode> Post(PromocodeDto dto)
         {
-            Promocode a= _mapper.Map<Promocode>(dto);
-           return await _genericService.post(a);
+            Promocode a = _mapper.Map<Promocode>(dto);
+            return await _genericService.post(a);
+
+        }
+
+        [HttpGet]
+
+        public async Task<object> Get()
+        {
+
+            return await _genericService.Get();
 
         }
 
 
+        [HttpGet("{id}")]
 
-        [HttpPost]
+        public async Task<Promocode> Get(int id)
+        {
+
+            return await _genericService.Get(id);
+
+        }
+
+        [HttpPut]
 
         public async Task<Promocode> Put(Promocode val)
         {
