@@ -56,6 +56,7 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<Order> Orders { get; set; }
 
+    public virtual DbSet<Promocode> Promocodes { get; set; }
     public virtual DbSet<Orderitem> Orderitems { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
@@ -542,7 +543,27 @@ public partial class PostgresContext : DbContext
                 .HasForeignKey(d => d.BucketId)
                 .HasConstraintName("objects_bucketId_fkey");
         });
+        modelBuilder.Entity<Promocode>(entity =>
+        {
+            entity.HasKey(e => e.PromocodeId).HasName("promocode_pkey");
 
+            entity.ToTable("orders");
+
+            entity.Property(e => e.PromocodeId)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("promocodeid");
+            entity.Property(e => e.Code).HasColumnName("code");
+            entity.Property(e => e.DiscountAmount).HasColumnName("discount_amount");
+            entity.Property(e => e.CodeLimit).HasColumnName("codelimit");
+            entity.Property(e => e.Start_Date).HasColumnName("start_date");
+            entity.Property(e => e.Expiration_Date).HasColumnName("expiration_date");
+            entity.Property(e => e.UserLimit).HasColumnName("userlimit");
+            entity.Property(e => e.Total_Usage).HasColumnName("total_usage");
+            entity.Property(e => e.IsActive).HasColumnName("isactive");
+
+
+
+        });
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.Orderid).HasName("orders_pkey");
